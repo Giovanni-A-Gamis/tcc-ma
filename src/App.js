@@ -1,10 +1,11 @@
 import * as React from 'react';
-import MainContainer from './navigation/MainContainer';
+import { Provider as PaperProvider } from 'react-native-paper';
+import MainContainer from '../src/navigation/MainContainer';
 
-function App() {
+export default function App() {
   return (
-    <MainContainer />
-  )
+    <PaperProvider>
+      <MainContainer />
+    </PaperProvider>
+  );
 }
-
-export default App;
