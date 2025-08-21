@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image, BackHandler, Alert } from 'react-native';
 import { Menu, Divider } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
 
 // Screens
 import HomeScreen from './screens/Home/index';
@@ -20,42 +21,86 @@ const dailyName = 'Diário';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainContainer() {
+export default function MainContainer() {   
+    
+    /*
+    const backAction = () => {
+            const state = tabNavigationRef.current?.getState();
+            const currentRouteName = state?.routes[state.index].name;
+
+            if (currentRouteName === homeName) {
+                Alert.alert("Sair do app", "Deseja realmente sair?", [
+                    { text: "Cancelar", style: "cancel" },
+                    { text: "Sair", onPress: () => BackHandler.exitApp() }
+                ]);
+            return true;
+        } else {
+            tabNavigationRef.current?.navigate(homeName); // agora funciona
+            return true;
+            }
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => backHandler.remove();
+    }, []);
+    //esse código é para interceptar o botão de voltar do Android e perguntar se o usuário quer sair do app quando estiver na tela Home.
+    //não está funcionando, o de baixo está funcionando, mas esse não.
+    */
+
+    useEffect(() => {
+        const backAction = () => {
+            Alert.alert("Sair do app", "Deseja realmente sair?", [
+                { text: "Cancelar", style: "cancel" },
+                { text: "Sair", onPress: () => BackHandler.exitApp() }
+            ]);
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+
+        return () => backHandler.remove();
+    }, []);
+    
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                initialRouteName={homeName}
-                screenOptions={({ route, navigation }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
-                        if (route.name === homeName) iconName = focused ? 'home' : 'home-outline';
-                        else if (route.name === guideName) iconName = focused ? 'school' : 'school-outline';
-                        else if (route.name === gameName) iconName = focused ? 'game-controller' : 'game-controller-outline';
-                        else if (route.name === alarmName) iconName = focused ? 'alarm' : 'alarm-outline';
-                        else if (route.name === dailyName) iconName = focused ? 'book' : 'book-outline';
-                        return <Ionicons name={iconName} size={size} color={color} />;
-                    },
+        <Tab.Navigator
+            initialRouteName={homeName}
+            screenOptions={({ route, navigation }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    if (route.name === homeName) iconName = focused ? 'home' : 'home-outline';
+                    else if (route.name === guideName) iconName = focused ? 'school' : 'school-outline';
+                    else if (route.name === gameName) iconName = focused ? 'game-controller' : 'game-controller-outline';
+                    else if (route.name === alarmName) iconName = focused ? 'alarm' : 'alarm-outline';
+                    else if (route.name === dailyName) iconName = focused ? 'book' : 'book-outline';
+                    return <Ionicons name={iconName} size={size} color={color} />;
+                },
 
-                    headerShown: true,
-                    headerStyle: { backgroundColor: '#17285D' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: { fontWeight: 'bold', fontSize: 20, fontFamily: 'Poppins', color: 'white' },
+                headerShown: true,
+                headerStyle: { backgroundColor: '#17285D' },
+                headerTintColor: 'white',
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 20, fontFamily: 'Poppins', color: 'white' },
 
-                    headerRight: () => <HeaderRight navigation={navigation} />,
+                headerRight: () => <HeaderRight navigation={navigation} />,
 
-                    tabBarActiveTintColor: 'tomato',
-                    tabBarInactiveTintColor: 'white',
-                    tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
-                    tabBarStyle: { padding: 10, height: 70, backgroundColor: '#17285D' },
-                })}
-            >
+                tabBarActiveTintColor: 'tomato',
+                tabBarInactiveTintColor: 'white',
+                tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
+                tabBarStyle: { padding: 10, height: 70, backgroundColor: '#17285D' },
+            })}
+        >
             <Tab.Screen name={homeName} component={HomeScreen} options={{ title: 'Início' }} />
             <Tab.Screen name={gameName} component={GameScreen} options={{ title: 'Jogos' }} />
             <Tab.Screen name={guideName} component={GuideScreen} options={{ title: 'Guia' }} />
             <Tab.Screen name={alarmName} component={AlarmScreen} options={{ title: 'Alarmes' }} />
             <Tab.Screen name={dailyName} component={DailyScreen} options={{ title: 'Diário' }} />
-            </Tab.Navigator>
-        </NavigationContainer>
+        </Tab.Navigator>
     );
 }
 
@@ -64,6 +109,13 @@ function HeaderRight({ navigation }) {
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
+    const nav = useNavigation();
+    const handleLogout = () => {
+        nav.reset({
+            index: 0,
+            routes: [{ name: 'Welcome' }],
+        })
+    };
 
     return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -72,7 +124,7 @@ function HeaderRight({ navigation }) {
             onDismiss={closeMenu}
             anchor={
                 <TouchableOpacity onPress={openMenu}>
-                <Ionicons name="menu" size={24} color="white" style={{ marginRight: 15}} />
+                    <Ionicons name="menu" size={24} color="white" style={{ marginRight: 15}} />
                 </TouchableOpacity>
             }
             contentStyle={{ backgroundColor: '#17285D' }}
@@ -90,7 +142,12 @@ function HeaderRight({ navigation }) {
             <Menu.Item onPress={() => {
                 closeMenu();
                 console.log('Ativar modo escuro'); // lógica do modo escuro virá aqui
-            }} title="Modo escuro" titleStyle={{ color: 'white', fontStyle: 'italic' }} />          
+            }} title="Modo escuro" titleStyle={{ color: 'white', fontStyle: 'italic' }} />  
+            <Divider />
+            <Menu.Item onPress={() => {
+                closeMenu();
+                handleLogout();
+            }} title="Sair" titleStyle={{ color: 'red' }} />        
         </Menu>
     </View>
     );

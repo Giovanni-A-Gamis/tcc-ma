@@ -2,7 +2,6 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainContainer from './MainContainer';
 
-//Telas de navegação
 import BoasVindas from './screens/Welcome';
 import Login from './screens/Login';
 import Questionario from './screens/Questionario';
