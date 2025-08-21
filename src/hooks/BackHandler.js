@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Alert, BackHandler } from 'react-native';
+import { Alert, BackHandler } from 'react-native';
 
 export default function Handler() {
     useEffect(() => {

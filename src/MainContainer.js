@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, TouchableOpacity } from 'react-native';
 import { Menu, Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import Handler from './utils/BackHandler';
+import Handler from './hooks/BackHandler';
 
 // Screens
 import HomeScreen from './screens/Home/index';
