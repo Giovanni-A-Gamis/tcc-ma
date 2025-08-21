@@ -3,9 +3,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainContainer from './MainContainer';
 
 //Telas de navegação
-import BoasVindas from '../navigation/screens/WelcomeScreen';
-import Login from '../navigation/screens/LoginScreen';
-import Questionario from '../navigation/screens/QuestionarioScreen';
+import BoasVindas from './screens/Welcome';
+import Login from './screens/Login';
+import Questionario from './screens/Questionario';
 
 const Stack = createNativeStackNavigator();
 

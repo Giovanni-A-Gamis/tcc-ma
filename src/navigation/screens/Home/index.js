@@ -1,8 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFonts } from '@expo-google-fonts/poppins';
+import { styles } from './styles';
 
 export default function HomeScreen() {
+    
+    
     return (
     <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -35,33 +39,3 @@ export default function HomeScreen() {
     </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F2F2F2',
-    },
-    scrollContent: {
-        padding: 16,
-    },
-    memo: {
-        width: 50,
-        height: 50,
-        resizeMode: 'contain',
-    },
-    card: {
-        backgroundColor: '#FFF',
-        padding: 16,
-        marginBottom: 16,
-    },
-    cardTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 8,
-        color: '#333',
-    },
-    cardText: {
-        fontSize: 16,
-        color: '#555',
-    },
-});

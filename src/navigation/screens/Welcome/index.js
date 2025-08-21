@@ -8,8 +8,15 @@ import {
     ImageBackground,
     Animated
 } from 'react-native';
+import { useFonts } from '@expo-google-fonts/poppins';
+import { styles } from './styles';
 
 export default function WelcomeScreen({ navigation }) {
+    let [fontsLoaded] = useFonts({
+        Poppins_400Regular: require('../../../../assets/fonts/Poppins-Regular.ttf'),
+        Poppins_700Bold: require('../../../../assets/fonts/Poppins-Bold.ttf'),
+    });
+    
     const fadeAnim = useRef(new Animated.Value(0)).current; // Opacidade
     const slideAnim = useRef(new Animated.Value(50)).current; // Posição Y
 
@@ -30,7 +37,7 @@ export default function WelcomeScreen({ navigation }) {
 
     return (
         <ImageBackground 
-            source={require('../../../assets/bg.jpg')}
+            source={require('../../../../assets/bg.jpg')}
             style={styles.background}
         >
             <View style={styles.overlay} />
@@ -42,7 +49,7 @@ export default function WelcomeScreen({ navigation }) {
                 }]}
             >
                 <Image 
-                    source={require('../../../assets/logocnome.png')} 
+                    source={require('../../../../assets/logocnome.png')} 
                     style={styles.logo} 
                 />
 
@@ -65,47 +72,3 @@ export default function WelcomeScreen({ navigation }) {
         </ImageBackground>
     );
 }
-
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        justifyContent: 'flex-end',
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.4)', // Escurece a imagem
-    },
-    content: {
-        alignItems: 'center',
-        padding: 20,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 20,
-    },
-    logo: {
-        width: 325,
-        height: 100,
-        resizeMode: 'contain',
-        marginBottom: 15,
-    },
-    buttonPrimary: {
-        backgroundColor: '#FFF',
-        paddingVertical: 14,
-        paddingHorizontal: 40,
-        borderRadius: 25,
-        marginBottom: 5,
-        elevation: 2,
-    },
-    buttonTextPrimary: {
-        color: '#000',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    buttonSecondary: {
-        paddingVertical: 14,
-        paddingHorizontal: 40,
-    },
-    buttonTextSecondary: {
-        color: '#000',
-        fontSize: 16,
-    }
-});

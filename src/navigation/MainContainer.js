@@ -6,11 +6,11 @@ import { View, TouchableOpacity, Image } from 'react-native';
 import { Menu, Divider } from 'react-native-paper';
 
 // Screens
-import HomeScreen from './screens/HomeScreen';
-import GuideScreen from './screens/GuideScreen';
-import GameScreen from './screens/GamesScreen';
-import AlarmScreen from './screens/AlarmScreen';
-import DailyScreen from './screens/DailyScreen';
+import HomeScreen from './screens/Home/index';
+import GuideScreen from './screens/Guide/index';
+import GameScreen from './screens/Games/index';
+import AlarmScreen from './screens/Alarm/index';
+import DailyScreen from './screens/Daily/index';
 
 const homeName = 'Home';
 const guideName = 'Guia';
