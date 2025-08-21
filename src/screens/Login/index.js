@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { styles } from './styles';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from "@expo/vector-icons";

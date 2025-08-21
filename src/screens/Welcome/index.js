@@ -13,8 +13,8 @@ import { styles } from './styles';
 
 export default function WelcomeScreen({ navigation }) {
     let [fontsLoaded] = useFonts({
-        Poppins_400Regular: require('../../../../assets/fonts/Poppins-Regular.ttf'),
-        Poppins_700Bold: require('../../../../assets/fonts/Poppins-Bold.ttf'),
+        Poppins_400Regular: require('../../../assets/fonts/Poppins-Regular.ttf'),
+        Poppins_700Bold: require('../../../assets/fonts/Poppins-Bold.ttf'),
     });
     
     const fadeAnim = useRef(new Animated.Value(0)).current; // Opacidade
@@ -37,7 +37,7 @@ export default function WelcomeScreen({ navigation }) {
 
     return (
         <ImageBackground 
-            source={require('../../../../assets/bg.jpg')}
+            source={require('../../../assets/bg.jpg')}
             style={styles.background}
         >
             <View style={styles.overlay} />
@@ -49,7 +49,7 @@ export default function WelcomeScreen({ navigation }) {
                 }]}
             >
                 <Image 
-                    source={require('../../../../assets/logocnome.png')} 
+                    source={require('../../../assets/logocnome.png')} 
                     style={styles.logo} 
                 />
 

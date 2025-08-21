@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { View, TouchableOpacity, Image, BackHandler, Alert } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Menu, Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
+import Handler from './utils/BackHandler';
 
 // Screens
 import HomeScreen from './screens/Home/index';
@@ -21,52 +21,8 @@ const dailyName = 'Diário';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainContainer() {   
-    
-    /*
-    const backAction = () => {
-            const state = tabNavigationRef.current?.getState();
-            const currentRouteName = state?.routes[state.index].name;
-
-            if (currentRouteName === homeName) {
-                Alert.alert("Sair do app", "Deseja realmente sair?", [
-                    { text: "Cancelar", style: "cancel" },
-                    { text: "Sair", onPress: () => BackHandler.exitApp() }
-                ]);
-            return true;
-        } else {
-            tabNavigationRef.current?.navigate(homeName); // agora funciona
-            return true;
-            }
-        };
-
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        );
-
-        return () => backHandler.remove();
-    }, []);
-    //esse código é para interceptar o botão de voltar do Android e perguntar se o usuário quer sair do app quando estiver na tela Home.
-    //não está funcionando, o de baixo está funcionando, mas esse não.
-    */
-
-    useEffect(() => {
-        const backAction = () => {
-            Alert.alert("Sair do app", "Deseja realmente sair?", [
-                { text: "Cancelar", style: "cancel" },
-                { text: "Sair", onPress: () => BackHandler.exitApp() }
-            ]);
-            return true;
-        };
-
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        );
-
-        return () => backHandler.remove();
-    }, []);
+export default function MainContainer() { 
+    Handler(); // Chama o Handler para interceptar o botão de voltar do Android
     
     return (
         <Tab.Navigator
