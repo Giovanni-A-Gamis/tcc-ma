@@ -1,1 +1,1 @@
-# TCC do curso de Desenvolvimento de Sistemas - Etec Bento Quirino 2025
+# TCC do Curso de Desenvolvimento de Sistemas - Etec Bento Quirino 2025
