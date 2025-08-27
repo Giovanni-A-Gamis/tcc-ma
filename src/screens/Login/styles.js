@@ -1,11 +1,16 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-    container: {
+    background: {
         flex: 1,
-        backgroundColor: '#234C6D',
+        width: '100%',
+        height: '100%',
+    },
+    overlay: {
+        flex: 1,
         alignItems: 'center',
-        paddingTop: 150,
+        justifyContent: 'center',
+        
     },
     title: {
         fontSize: 24,
@@ -16,8 +21,8 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: '#8ec0c7',
         borderRadius: 8,
-        borderWidth:2,
-        borderColor:'black',
+        borderWidth: 2,
+        borderColor: 'black',
     },
     buttonText: {
         color: 'black',
@@ -51,7 +56,8 @@ export const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 20,      
+        marginBottom: 20,
+        
     },
     logocnome: {
         width: 320,
