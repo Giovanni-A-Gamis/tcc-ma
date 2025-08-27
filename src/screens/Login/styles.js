@@ -3,20 +3,24 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F2F2F2',
+        backgroundColor: '#234C6D',
         alignItems: 'center',
-        justifyContent: 'center'
+        paddingTop: 150,
     },
     title: {
         fontSize: 24,
         fontFamily: 'Poppins_700Bold',
+        color: 'white',
+        marginBottom: 30,
     },
     button: {
-        backgroundColor: '#17285D',
+        backgroundColor: '#8ec0c7',
         borderRadius: 8,
+        borderWidth:2,
+        borderColor:'black',
     },
     buttonText: {
-        color: '#FFF',
+        color: 'black',
         fontSize: 16,
         paddingVertical: 14,
         paddingHorizontal: 40,
@@ -24,14 +28,14 @@ export const styles = StyleSheet.create({
         fontFamily: 'Poppins_400Regular',
     },
     inputContainer: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#FFF',
         borderRadius: 8,
-        width: '80%',
-        height: 45,
-        marginVertical: 10,
+        width: '85%',
+        height: 55,
         paddingHorizontal: 10,
+        marginBottom: 30,
     },
     input: {
         flex: 1,
@@ -47,6 +51,11 @@ export const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 10,
+        marginBottom: 20,      
+    },
+    logocnome: {
+        width: 320,
+        height: 50,
+        marginBottom: 40,
     },
 });
