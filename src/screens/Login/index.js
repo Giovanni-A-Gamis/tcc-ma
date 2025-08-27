@@ -27,10 +27,9 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.overlay}>
         <StatusBar style="light" />
         <Image source={logocnome} style={styles.logocnome} />
-        
+        <Text style={styles.title}>Seja bem-vindo de volta!</Text>
 
         <View style={styles.allinput}>
-        <Text style={styles.title}>Seja bem-vindo de volta!</Text>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
