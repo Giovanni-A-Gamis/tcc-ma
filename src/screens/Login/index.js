@@ -13,8 +13,29 @@ export default function LoginScreen({ navigation }) {
     const [password, setPassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert('Erro', 'Preencha email e senha.');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const data = await login(email, password);
+            console.log('Usuário logado:', data);
+
+            navigation.navigate('MainContainer');
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Erro no login', error.message || 'Ocorreu um erro.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
+
+        
         <ImageBackground source={fundo} resizeMode="cover" style={styles.background}>
             <StatusBar style="light" />
             <View style={styles.overlay}>
@@ -63,6 +84,12 @@ export default function LoginScreen({ navigation }) {
                         disabled={loading}
                     >
                         <Text style={styles.buttonText}>{loading ? 'Carregando...' : 'Login'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{ marginTop: 15 }}
+                        onPress={() => navigation.navigate('MainContainer')}
+                    >
+                        <Text style={{ fontFamily: 'Poppins_700Bold' }}>DEV</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
         width: 200,
         height: 175,
         resizeMode: 'contain',
+        marginBottom: 10,
     },
     title: {
         fontSize: 22,
@@ -51,6 +52,8 @@ export const styles = StyleSheet.create({
         height: 50,
         paddingHorizontal: 15,
         marginBottom: 15,
+        borderColor: '#17285D',
+        borderWidth: 1,
     },
     input: {
         flex: 1,
@@ -69,11 +72,13 @@ export const styles = StyleSheet.create({
         paddingVertical: 14,
         paddingHorizontal: 50,
         elevation: 2,
+        borderColor: '#17285D',
+        borderWidth: 1,
     },
     buttonText: {
-        color: 'white',
+        color: '#17285D',
         fontSize: 16,
         textAlign: 'center',
-        fontFamily: 'Poppins_400Regular',
+        fontFamily: 'Poppins_700Bold',
     },
 });
