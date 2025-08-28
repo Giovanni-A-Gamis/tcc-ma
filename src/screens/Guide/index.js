@@ -1,12 +1,17 @@
-import * as React from 'react';
-import { View, Text } from 'react-native';
+import React from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { styles } from './styles';
+import { Divider } from 'react-native-paper';
 
-export default function SettingsScreen({navigation}) {
+export default function HomeScreen() {
+
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text
-                onPress={() => navigation.navigate('Home')}
-                style={{ fontSize: 26, fontWeight: 'bold'}}>Guia</Text>
-        </View>
-    )
+    <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+
+        <Text></Text>
+        </ScrollView>
+    </SafeAreaView>
+    );
 }

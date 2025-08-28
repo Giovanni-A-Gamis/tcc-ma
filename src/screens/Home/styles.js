@@ -9,11 +9,6 @@ export const styles = StyleSheet.create({
     scrollContent: {
         padding: 16,
     },
-    memo: {
-        width: 50,
-        height: 50,
-        resizeMode: 'contain',
-    },
     card: {
         backgroundColor: '#FFF',
         padding: 16,
