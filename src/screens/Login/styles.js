@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     },
     card: {
         width: '90%',
-        backgroundColor: 'white',
+        backgroundColor: '#F0F0F0',
         borderRadius: 20,
         paddingVertical: 30,
         paddingHorizontal: 25,
@@ -25,11 +25,10 @@ export const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 5,
     },
-    logocnome: {
-        width: 250,
-        height: 60,
+    logo: {
+        width: 200,
+        height: 175,
         resizeMode: 'contain',
-        marginBottom: 20,
     },
     title: {
         fontSize: 22,
@@ -46,7 +45,7 @@ export const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#fff',
         borderRadius: 10,
         width: '100%',
         height: 50,
@@ -69,6 +68,7 @@ export const styles = StyleSheet.create({
         borderRadius: 12,
         paddingVertical: 14,
         paddingHorizontal: 50,
+        elevation: 2,
     },
     buttonText: {
         color: 'white',

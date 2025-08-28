@@ -5,6 +5,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { Menu, Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Handler from './hooks/BackHandler';
+import { handleLogout } from './hooks/HandleLogout';
 
 // Screens
 import HomeScreen from './screens/Home/index';
@@ -41,14 +42,14 @@ export default function MainContainer() {
                 headerShown: true,
                 headerStyle: { backgroundColor: '#17285D' },
                 headerTintColor: 'white',
-                headerTitleStyle: { fontWeight: 'bold', fontSize: 20, fontFamily: 'Poppins', color: 'white' },
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 20, fontFamily: 'Poppins700_Bold', color: 'white' },
 
                 headerRight: () => <HeaderRight navigation={navigation} />,
 
-                tabBarActiveTintColor: 'tomato',
+                tabBarActiveTintColor: '#8ec0c7',
                 tabBarInactiveTintColor: 'white',
                 tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
-                tabBarStyle: { padding: 10, height: 70, backgroundColor: '#17285D' },
+                tabBarStyle: { padding: 10, height: 70, backgroundColor: '#17285D', fontFamily: 'Poppins_400Regular' },
             })}
         >
             <Tab.Screen name={homeName} component={HomeScreen} options={{ title: 'Início' }} />
@@ -66,12 +67,6 @@ function HeaderRight({ navigation }) {
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
     const nav = useNavigation();
-    const handleLogout = () => {
-        nav.reset({
-            index: 0,
-            routes: [{ name: 'Welcome' }],
-        })
-    };
 
     return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -102,7 +97,7 @@ function HeaderRight({ navigation }) {
             <Divider />
             <Menu.Item onPress={() => {
                 closeMenu();
-                handleLogout();
+                handleLogout(navigation);
             }} title="Sair" titleStyle={{ color: 'red' }} />        
         </Menu>
     </View>
