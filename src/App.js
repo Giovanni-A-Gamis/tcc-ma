@@ -3,7 +3,6 @@ import { PaperProvider } from 'react-native-paper';
 import RootNavigator from './/RootNavigator';
 
 export default function App() {
-
   return (
     <PaperProvider>
       <NavigationContainer>

@@ -22,7 +22,7 @@ const dailyName = 'Diário';
 const Tab = createBottomTabNavigator();
 
 export default function MainContainer() { 
-    Handler(); // Chama o Handler para interceptar o botão de voltar do Android
+    Handler();
     
     return (
         <Tab.Navigator
