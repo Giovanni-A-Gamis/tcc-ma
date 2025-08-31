@@ -38,11 +38,22 @@ export default function Diary() {
         const data = await getDiaries(user_id);
         setDiaries(data);
 
-        const today = new Date().toISOString().split("T")[0];
-        const todayEntry = data.find((d) => d.data_registro.startsWith(today));
+        const today = new Date(); // horário local
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
+        const todayEntry = data.find((d) => {
+            const localDate = new Date(d.data_registro); // transforma UTC em local
+            const dStr = `${localDate.getFullYear()}-${String(localDate.getMonth()+1).padStart(2,'0')}-${String(localDate.getDate()).padStart(2,'0')}`;
+            return dStr === todayStr;
+        });
+
         setTodayDiary(todayEntry || null);
         setConteudo(todayEntry ? todayEntry.conteudo : "");
     }
+
 
     async function saveTodayDiary() {
         if (!user) return;

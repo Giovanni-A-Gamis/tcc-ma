@@ -7,17 +7,9 @@ export const styles = StyleSheet.create({
         padding: 16,
     },
 
-    header: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 16,
-        textAlign: "center",
-        color: "#333",
-    },
-
     diaryList: {
         flex: 1,
-        marginBottom: 60, 
+        marginBottom: 60,
     },
 
     diaryItem: {
@@ -29,16 +21,23 @@ export const styles = StyleSheet.create({
     },
 
     diaryDate: {
-        fontSize: 19,
+        fontSize: 18,
         color: "#000",
         marginBottom: 6,
-        fontFamily: 'Poppins_700Bold'
+        fontFamily: "Poppins_700Bold",
     },
 
-    diaryContent: {
+    diaryQuestion: {
+        fontSize: 14,
+        color: "#555",
+        marginBottom: 2,
+        fontFamily: "Poppins_700Bold",
+    },
+
+    diaryAnswer: {
         fontSize: 16,
         color: "#333",
-        fontFamily: 'Poppins_400Regular'
+        fontFamily: "Poppins_400Regular",
     },
 
     fab: {
@@ -60,7 +59,6 @@ export const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 
-    // Modal
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
@@ -73,6 +71,7 @@ export const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         width: "90%",
+        maxHeight: "80%",
         elevation: 5,
     },
 
@@ -81,17 +80,27 @@ export const styles = StyleSheet.create({
         marginBottom: 12,
         color: "#333",
         textAlign: "center",
+        fontFamily: "Poppins_700Bold",
+    },
+
+    modalQuestion: {
+        fontSize: 14,
+        marginBottom: 4,
+        fontWeight: "bold",
+        color: "#555",
+        fontFamily: "Poppins_600SemiBold",
     },
 
     textArea: {
-        height: 150,
+        height: 80,
         borderColor: "#CCC",
         borderWidth: 1,
         borderRadius: 8,
         padding: 10,
-        marginBottom: 15,
+        marginBottom: 10,
         textAlignVertical: "top",
         backgroundColor: "#FAFAFA",
+        fontFamily: "Poppins_400Regular",
     },
 
     saveButton: {
