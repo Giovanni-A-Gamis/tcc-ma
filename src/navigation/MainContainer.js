@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import Handler from '../hooks/BackHandler';
 import { handleLogout } from '../hooks/HandleLogout';
 
-// Screens
+// Telas
 import HomeScreen from '../screens/Home/index';
 import GuideScreen from '../screens/Guide/index';
 import GameScreen from '../screens/Games/index';
@@ -42,14 +42,14 @@ export default function MainContainer() {
                 headerShown: true,
                 headerStyle: { backgroundColor: '#17285D' },
                 headerTintColor: 'white',
-                headerTitleStyle: { fontWeight: 'bold', fontSize: 20, fontFamily: 'Poppins700_Bold', color: 'white' },
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 20, fontFamily: 'Poppins_700Bold', color: 'white' },
 
                 headerRight: () => <HeaderRight navigation={navigation} />,
 
                 tabBarActiveTintColor: '#8ec0c7',
                 tabBarInactiveTintColor: 'white',
-                tabBarLabelStyle: { paddingBottom: 10, fontSize: 10 },
-                tabBarStyle: { padding: 10, height: 70, backgroundColor: '#17285D', fontFamily: 'Poppins_400Regular' },
+                tabBarLabelStyle: { paddingBottom: 10, fontSize: 10, fontFamily: 'Poppins_400Regular' },
+                tabBarStyle: { padding: 10, height: 70, backgroundColor: '#17285D' },
             })}
         >
             <Tab.Screen name={homeName} component={HomeScreen} options={{ title: 'Início' }} />

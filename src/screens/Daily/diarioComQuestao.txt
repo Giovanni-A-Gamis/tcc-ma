@@ -8,17 +8,15 @@ export default function Diary() {
     const [user, setUser] = useState(null);
     const [diaries, setDiaries] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [conteudo, setConteudo] = useState("");
+    const [answers, setAnswers] = useState({});
     const [todayDiary, setTodayDiary] = useState(null);
-    const [expandedDiaries, setExpandedDiaries] = useState({});
 
-
-    function toggleExpand(id) {
-        setExpandedDiaries(prev => ({
-            ...prev,
-            [id]: !prev[id], 
-        }));
-    }
+    const questions = [
+        { id: "cafe", label: "O que você comeu de café da manhã?" },
+        { id: "estudo", label: "O que você estudou hoje?" },
+        { id: "atividade", label: "Qual atividade realizou hoje?" },
+        { id: "livre", label: "Livre!!!" }
+    ];
 
     useEffect(() => {
         fetchUser();
@@ -41,61 +39,83 @@ export default function Diary() {
         const today = new Date().toISOString().split("T")[0];
         const todayEntry = data.find((d) => d.data_registro.startsWith(today));
         setTodayDiary(todayEntry || null);
-        setConteudo(todayEntry ? todayEntry.conteudo : "");
+
+        if (todayEntry && todayEntry.conteudo) {
+        try {
+            setAnswers(JSON.parse(todayEntry.conteudo));
+        } catch {
+            setAnswers({});
+        }
+        } else {
+        setAnswers({});
+        }
     }
 
     async function saveTodayDiary() {
         if (!user) return;
 
+        const contentToSave = JSON.stringify(answers);
+
         if (todayDiary) {
-        await updateDiary(todayDiary.id, conteudo);
+        await updateDiary(todayDiary.id, contentToSave);
         } else {
-        await createDiary({ user_id: user.id, titulo: "Dia Atual", conteudo });
+        await createDiary({ user_id: user.id, titulo: "Dia Atual", conteudo: contentToSave });
         }
+
         setModalVisible(false);
         loadDiaries(user.id);
     }
 
     return (
         <View style={styles.container}>
-
         <ScrollView style={styles.diaryList}>
             {diaries.map((d) => {
-                const isExpanded = expandedDiaries[d.id];
-                return (
-                    <TouchableOpacity key={d.id} onPress={() => toggleExpand(d.id)}>
-                        <View style={styles.diaryItem}>
-                            <Text style={styles.diaryDate}>
-                                {new Date(d.data_registro).toLocaleDateString("pt-BR")}
-                            </Text>
-                            <Text
-                                style={styles.diaryContent}
-                                numberOfLines={isExpanded ? undefined : 3} // mostra 3 linhas ou tudo
-                            >
-                                {d.conteudo}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                );
+            let diaryData = {};
+            try {
+                diaryData = JSON.parse(d.conteudo);
+            } catch {}
+            return (
+                <View key={d.id} style={styles.diaryItem}>
+                <Text style={styles.diaryDate}>
+                    {new Date(d.data_registro).toLocaleDateString("pt-BR")}
+                </Text>
+                {Object.keys(diaryData).map((key) => (
+                    <View key={key} style={{ marginBottom: 6 }}>
+                    <Text style={styles.diaryQuestion}>
+                        {questions.find((q) => q.id === key)?.label}
+                    </Text>
+                    <Text style={styles.diaryAnswer}>{diaryData[key]}</Text>
+                    </View>
+                ))}
+                </View>
+            );
             })}
         </ScrollView>
-
 
         <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
             <Text style={styles.fabText}>+</Text>
         </TouchableOpacity>
 
-            {/* Modal */}
+        {/* Modal */}
             <Modal visible={modalVisible} animationType="slide" transparent>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Escreva seu dia</Text>
-                            <TextInput
-                                style={styles.textArea}
-                                multiline
-                                value={conteudo}
-                                onChangeText={setConteudo}
-                            />
+                        <Text style={styles.modalTitle}>Preencha seu dia</Text>
+                            <ScrollView>
+                                {questions.map((q) => (
+                                    <View key={q.id} style={{ marginBottom: 12 }}>
+                                    <Text style={styles.modalQuestion}>{q.label}</Text>
+                                    <TextInput
+                                        style={styles.textArea}
+                                        multiline
+                                        value={answers[q.id] || ""}
+                                        onChangeText={(text) =>
+                                        setAnswers((prev) => ({ ...prev, [q.id]: text }))
+                                        }
+                                    />
+                                    </View>
+                                ))}
+                            </ScrollView>
                             <TouchableOpacity style={styles.saveButton} onPress={saveTodayDiary}>
                                 <Text style={styles.saveButtonText}>Salvar</Text>
                             </TouchableOpacity>
@@ -105,8 +125,8 @@ export default function Diary() {
                             >
                                 <Text style={styles.cancelButtonText}>Cancelar</Text>
                             </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
             </Modal>
         </View>
     );

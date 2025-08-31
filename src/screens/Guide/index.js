@@ -39,7 +39,7 @@ export default function Guide({ navigation }) {
         return (
             <View style={styles.section} key={categoria}>
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>{categoria}</Text>
+                    <Text style={styles.sectionTitle}>Guias sobre {categoria}</Text>
                 </View>
 
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
