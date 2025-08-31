@@ -15,6 +15,7 @@ export default function RootNavigator() {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Questionario" component={Questionario} />
             <Stack.Screen name="MainContainer" component={MainContainer} />
+            <Stack.Screen name="GuideDetail" component={require('./screens/GuideDetail').default} /*options={{title: '', headerShown: true}}*/ />
         </Stack.Navigator>
     )
 }

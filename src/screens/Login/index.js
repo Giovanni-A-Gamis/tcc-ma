@@ -90,6 +90,7 @@ export default function LoginScreen({ navigation }) {
                         onPress={() => navigation.navigate('MainContainer')}
                     >
                         <Text style={{ fontFamily: 'Poppins_700Bold' }}>DEV</Text>
+                        
                     </TouchableOpacity>
                 </View>
             </View>

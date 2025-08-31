@@ -19,10 +19,6 @@ export const styles = StyleSheet.create({
         paddingVertical: 30,
         paddingHorizontal: 25,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
         elevation: 5,
     },
     logo: {
