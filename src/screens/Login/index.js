@@ -6,7 +6,7 @@ import { login } from '../../services/authService';
 import logo from '../../../assets/logo.png';
 import fundo from '../../../assets/fundologin.png';
 import { styles } from './styles';
-import { handleLogin } from '../../hooks/HandleLogin';
+import { handleLogin } from '../../hooks/HandleLogin'; // não funciona então coloquei direto a função aqui
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = React.useState('');

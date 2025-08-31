@@ -4,15 +4,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, TouchableOpacity } from 'react-native';
 import { Menu, Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import Handler from './hooks/BackHandler';
-import { handleLogout } from './hooks/HandleLogout';
+import Handler from '../hooks/BackHandler';
+import { handleLogout } from '../hooks/HandleLogout';
 
 // Screens
-import HomeScreen from './screens/Home/index';
-import GuideScreen from './screens/Guide/index';
-import GameScreen from './screens/Games/index';
-import AlarmScreen from './screens/Alarm/index';
-import DailyScreen from './screens/Daily/index';
+import HomeScreen from '../screens/Home/index';
+import GuideScreen from '../screens/Guide/index';
+import GameScreen from '../screens/Games/index';
+import AlarmScreen from '../screens/Alarm/index';
+import DailyScreen from '../screens/Daily/index';
 
 const homeName = 'Home';
 const guideName = 'Guia';
