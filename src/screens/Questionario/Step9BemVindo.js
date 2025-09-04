@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image, ImageBackground } from 'react-native';
 import { styles } from './styles';
-import memooi from '../../../assets/memooi.png';
-import fundo2 from '../../../assets/fundoquest.jpeg';
+import memooi from '../../../assets/memo.png';
+import fundo2 from '../../../assets/fundologin.png';
 
 export default function Step9BemVindo({ navigation}) {
   

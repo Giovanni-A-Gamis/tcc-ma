@@ -61,7 +61,7 @@ export default function WelcomeScreen({ navigation }) {
 
                 <TouchableOpacity 
                     style={styles.buttonSecondary}
-                    onPress={() => navigation.navigate('Questionario')}
+                    onPress={() => navigation.navigate('Step1Login')}
                 >
                     <Text style={styles.buttonTextSecondary}>
                         Primeira vez? Clique aqui

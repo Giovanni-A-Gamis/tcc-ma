@@ -13,18 +13,20 @@ import GuideScreen from '../screens/Guide/index';
 import GameScreen from '../screens/Games/index';
 import AlarmScreen from '../screens/Alarm/index';
 import DailyScreen from '../screens/Daily/index';
+import ProfileScreen from '../screens/Profile/index';
 
 const homeName = 'Home';
 const guideName = 'Guia';
 const gameName = 'Jogos';
 const alarmName = 'Alarme';
 const dailyName = 'Diário';
+const profileName = 'Perfil';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainContainer() { 
+export default function MainContainer() {
     Handler();
-    
+
     return (
         <Tab.Navigator
             initialRouteName={homeName}
@@ -42,7 +44,12 @@ export default function MainContainer() {
                 headerShown: true,
                 headerStyle: { backgroundColor: '#17285D' },
                 headerTintColor: 'white',
-                headerTitleStyle: { fontWeight: 'bold', fontSize: 20, fontFamily: 'Poppins_700Bold', color: 'white' },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 20,
+                    fontFamily: 'Poppins_700Bold',
+                    color: 'white'
+                },
 
                 headerRight: () => <HeaderRight navigation={navigation} />,
 
@@ -57,11 +64,14 @@ export default function MainContainer() {
             <Tab.Screen name={guideName} component={GuideScreen} options={{ title: 'Guia' }} />
             <Tab.Screen name={alarmName} component={AlarmScreen} options={{ title: 'Alarmes' }} />
             <Tab.Screen name={dailyName} component={DailyScreen} options={{ title: 'Diário' }} />
+            
+
+
         </Tab.Navigator>
     );
 }
 
-// Componente para headerRight com Menu
+// Menu do header
 function HeaderRight({ navigation }) {
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
@@ -69,37 +79,53 @@ function HeaderRight({ navigation }) {
     const nav = useNavigation();
 
     return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-                <TouchableOpacity onPress={openMenu}>
-                    <Ionicons name="menu" size={24} color="white" style={{ marginRight: 15}} />
-                </TouchableOpacity>
-            }
-            contentStyle={{ backgroundColor: '#17285D' }}
-        >
-            <Menu.Item onPress={() => {
-                closeMenu();
-                console.log('Perfil'); // trocar por navigation;navigate('Perfil') depois
-            }} title="Perfil" titleStyle={{ color: 'white' }} />
-            <Divider />
-            <Menu.Item onPress={() => {
-                closeMenu();
-                console.log('Ir para Sobre Nós'); // trocar por navigation.navigate('Sobre') depois
-            }} title="Sobre nós" titleStyle={{ color: 'white', fontStyle: 'italic' }} />
-            <Divider />
-            <Menu.Item onPress={() => {
-                closeMenu();
-                console.log('Ativar modo escuro'); // lógica do modo escuro virá aqui
-            }} title="Modo escuro" titleStyle={{ color: 'white', fontStyle: 'italic' }} />  
-            <Divider />
-            <Menu.Item onPress={() => {
-                closeMenu();
-                handleLogout(navigation);
-            }} title="Sair" titleStyle={{ color: 'red' }} />        
-        </Menu>
-    </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Menu
+                visible={visible}
+                onDismiss={closeMenu}
+                anchor={
+                    <TouchableOpacity onPress={openMenu}>
+                        <Ionicons name="menu" size={24} color="white" style={{ marginRight: 15 }} />
+                    </TouchableOpacity>
+                }
+                contentStyle={{ backgroundColor: '#17285D' }}
+            >
+                <Menu.Item
+                    onPress={() => {
+                        closeMenu();
+                        navigation.navigate(ProfileScreen); // agora navega certo
+                    }}
+                    title="Perfil"
+                    titleStyle={{ color: 'white' }}
+                />
+                <Divider />
+                <Menu.Item
+                    onPress={() => {
+                        closeMenu();
+                        console.log('Ir para Sobre Nós');
+                    }}
+                    title="Sobre nós"
+                    titleStyle={{ color: 'white', fontStyle: 'italic' }}
+                />
+                <Divider />
+                <Menu.Item
+                    onPress={() => {
+                        closeMenu();
+                        console.log('Ativar modo escuro');
+                    }}
+                    title="Modo escuro"
+                    titleStyle={{ color: 'white', fontStyle: 'italic' }}
+                />
+                <Divider />
+                <Menu.Item
+                    onPress={() => {
+                        closeMenu();
+                        handleLogout(navigation);
+                    }}
+                    title="Sair"
+                    titleStyle={{ color: 'red' }}
+                />
+            </Menu>
+        </View>
     );
 }

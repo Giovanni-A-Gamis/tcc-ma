@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
 import { styles } from './styles';
-import fundo2 from '../../../assets/fundoquest.jpeg';
+import fundo2 from '../../../assets/fundologin.png';
 
 export default function Step4Memoria1({ navigation}) {
   

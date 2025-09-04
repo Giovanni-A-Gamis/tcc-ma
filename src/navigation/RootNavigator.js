@@ -2,18 +2,19 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainContainer from './MainContainer';
 
-import BoasVindas from './screens/Welcome';
-import Login from './screens/Login';
+import BoasVindas from '../screens/Welcome';
+import Login from '../screens/Login';
+import Profile from '../screens/Profile';
 
-import Step1Login from './screens/Questionario/Step1Login';
-import Step2DadosPessoais from './screens/Questionario/Step2DadosPessoais';
-import Step3Pergunta from './screens/Questionario/Step3Pergunta';
-import Step4Memoria1 from './screens/Questionario/Step4Memoria1';
-import Step5Memoria2 from './screens/Questionario/Step5Memoria2';
-import Step6Memoria3 from './screens/Questionario/Step6Memoria3';
-import Step7Memoria4 from './screens/Questionario/Step7Memoria4';
-import Step8Memoria5 from './screens/Questionario/Step8Memoria5';
-import Step9BemVindo from './screens/Questionario/Step9BemVindo';
+import Step1Login from '../screens/Questionario/Step1Login';
+import Step2DadosPessoais from '../screens/Questionario/Step2DadosPessoais';
+import Step3Pergunta from '../screens/Questionario/Step3Pergunta';
+import Step4Memoria1 from '../screens/Questionario/Step4Memoria1';
+import Step5Memoria2 from '../screens/Questionario/Step5Memoria2';
+import Step6Memoria3 from '../screens/Questionario/Step6Memoria3';
+import Step7Memoria4 from '../screens/Questionario/Step7Memoria4';
+import Step8Memoria5 from '../screens/Questionario/Step8Memoria5';
+import Step9BemVindo from '../screens/Questionario/Step9BemVindo';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,7 @@ export default function RootNavigator() {
         <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Welcome" component={BoasVindas} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Profile" component={Profile} options={{title: 'Perfil', headerShown: true, headerStyle: {backgroundColor: '#17285D', fontfamily: 'Poppins_700Bold'}, headerTintColor: 'white'}}/>
 
             {/* Substitui o antigo "Questionario" pelos steps */}
             <Stack.Screen name="Step1Login" component={Step1Login} />
