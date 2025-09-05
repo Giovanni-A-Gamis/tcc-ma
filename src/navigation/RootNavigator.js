@@ -5,6 +5,7 @@ import MainContainer from './MainContainer';
 import BoasVindas from '../screens/Welcome';
 import Login from '../screens/Login';
 import Profile from '../screens/Profile';
+import GuideDetail from '../screens/GuideDetail';
 
 import Step1Login from '../screens/Questionario/Step1Login';
 import Step2DadosPessoais from '../screens/Questionario/Step2DadosPessoais';
@@ -25,6 +26,7 @@ export default function RootNavigator() {
             <Stack.Screen name="Welcome" component={BoasVindas} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Profile" component={Profile} options={{title: 'Perfil', headerShown: true, headerStyle: {backgroundColor: '#17285D', fontfamily: 'Poppins_700Bold'}, headerTintColor: 'white'}}/>
+            <Stack.Screen name="GuideDetail" component={GuideDetail} />
 
             {/* Substitui o antigo "Questionario" pelos steps */}
             <Stack.Screen name="Step1Login" component={Step1Login} />

@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, TextInput, Image, ImageBackground } from 'react-native';
 import { styles } from './styles';
-import memoduvida from '../../../assets/memo.png';
-import fundo2 from '../../../assets/fundologin.png';
+import memoduvida from '../../../assets/memoduvida.png';
+import fundo2 from '../../../assets/fundoquest.jpg';
 
 export default function Step3Pergunta({ navigation}) { 
     const next = () => {
