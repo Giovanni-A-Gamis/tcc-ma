@@ -1,199 +1,178 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView, Modal, TextInput } from "react-native";
-import { supabase } from "../../lib/supabase";
+// src/screens/Profile/index.js
+import React, { useEffect, useMemo, useState } from "react";
+import { View, Text, TouchableOpacity, Image, ScrollView, Modal } from "react-native";
 import { styles } from "./styles";
-import * as ImagePicker from "expo-image-picker";
+import {
+    getSessionUser,
+    getUserProfile,
+    updateUserPhoto,
+    publicAvatarUrl,
+    resolveAvatarUrl,
+} from "../../services/userService";
+import { handleLogout } from "../../hooks/HandleLogout";
+import { useNavigation } from "@react-navigation/native";
+
 
 export default function Profile() {
-    const [user, setUser] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [newName, setNewName] = useState("");
-    const [newPhoto, setNewPhoto] = useState(null);
+    const navigation = useNavigation();
+    
+    const [authUser, setAuthUser] = useState(null);
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [avatarModalVisible, setAvatarModalVisible] = useState(false);
 
-    const calcularDeficit = (nivel) => {
-        if (nivel < 50) return "Leve";
-        if (nivel < 100) return "Moderado";
-        return "Severo";
-    };
+    // Avatares padrão no bucket
+    const AVATAR_OPTIONS = [
+        "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/1.png",
+        "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/2.png",
+        "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/3.png",
+        "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/4.png",
+    ];
 
+    const avatarChoices = useMemo(
+    () =>
+        AVATAR_OPTIONS.map((url) => ({
+            path: url,   // vai ser salvo no banco
+            url,         // já é a URL pública
+        })),
+    []
+);
+
+
+    // Carrega auth user + profile
     useEffect(() => {
-        const fetchUser = async () => {
-            const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-            if (!supabaseUser) return;
+        (async () => {
+            try {
+                const user = await getSessionUser();
+                setAuthUser(user);
 
-            const { data, error } = await supabase
-                .from("user")
-                .select("*")
-                .eq("id", supabaseUser.id)
-                .single();
-
-            if (!error && data) {
-                setUser({
-                    ...data,
-                    foto: data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-                    deficit: calcularDeficit(data.nivel_memoria || 0),
-                });
+                if (user?.id) {
+                    const p = await getUserProfile(user.id);
+                    setProfile(p || null);
+                }
+            } catch (e) {
+                console.error("Erro ao carregar perfil:", e);
+            } finally {
+                setLoading(false);
             }
-        };
-
-        fetchUser();
+        })();
     }, []);
 
-    const openImagePicker = async () => {
-        // Solicita permissão
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            alert('Permissão para acessar a galeria é necessária!');
-            return;
-        }
+    const avatarUrl = useMemo(() => {
+        const foto = profile?.foto || AVATAR_OPTIONS[0];
+        return resolveAvatarUrl(foto);
+    }, [profile]);
 
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setNewPhoto(result.assets[0]);
+    const handleChooseAvatar = async (choice) => {
+        if (!authUser?.id) return;
+        try {
+            const updated = await updateUserPhoto(authUser.id, choice.path);
+            setProfile(updated);
+            setAvatarModalVisible(false);
+        } catch (e) {
+            console.error("Erro ao atualizar avatar:", e);
         }
     };
 
-    const saveProfile = async () => {
-        if (!user) return;
+    const xp = profile?.xp ?? 120;
+    const genero = profile?.genero ?? "—";
+    const deficit = profile?.deficit ?? "—";
+    const criado_em = profile?.criado_em
+        ? new Date(profile.criado_em).toLocaleDateString("pt-BR")
+        : "—";
 
-        const updates = { nome: newName || user.nome };
-
-        // Upload da nova foto
-        if (newPhoto) {
-            try {
-                console.log('Iniciando upload da foto:', newPhoto);
-                const fileExt = newPhoto.uri.split(".").pop();
-                const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-                const response = await fetch(newPhoto.uri);
-                if (!response.ok) {
-                    console.log('Erro ao buscar imagem:', response.status, response.statusText);
-                    alert('Não foi possível acessar a imagem selecionada.');
-                    return;
-                }
-                const blob = await response.blob();
-                const arrayBuffer = await blob.arrayBuffer();
-                const file = new File([arrayBuffer], newPhoto.fileName || fileName, { type: newPhoto.mimeType || "image/jpeg" });
-                console.log('File gerado:', file);
-
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from("avatars")
-                    .upload(fileName, file, { upsert: true });
-
-                if (uploadError) {
-                    console.log('Erro Supabase upload:', uploadError);
-                    alert('Erro ao enviar imagem para o servidor.');
-                    return;
-                }
-                console.log('Upload realizado:', uploadData);
-
-                const publicUrlData = supabase.storage
-                    .from("avatars")
-                    .getPublicUrl(fileName);
-                console.log('URL pública:', publicUrlData);
-
-                updates.foto = publicUrlData.data.publicUrl;
-            } catch (err) {
-                console.log("Erro ao fazer upload da foto:", err);
-                alert('Erro inesperado ao enviar imagem.');
-                return;
-            }
-        }
-
-        // Atualiza o usuário no banco
-        const { error } = await supabase
-            .from("user")
-            .update(updates)
-            .eq("id", user.id);
-
-        if (!error) {
-            setUser({ ...user, ...updates });
-            setModalVisible(false);
-            setNewPhoto(null);
-        } else {
-            console.log("Erro ao atualizar perfil:", error.message);
-        }
+    const getNivel = (valorXp) => {
+        if (valorXp < 100) return "Iniciante";
+        if (valorXp < 500) return "Intermediário";
+        if (valorXp < 1000) return "Avançado";
+        return "Mestre da Memória";
     };
 
-    if (!user) return <Text>Carregando...</Text>;
+    if (loading) {
+        return (
+            <View style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
+                <Text>Carregando...</Text>
+            </View>
+        );
+    }
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            {/* Avatar */}
+        <ScrollView style={styles.container}>
+            {/* Avatar + infos básicas */}
             <View style={styles.avatarContainer}>
-                <Image source={{ uri: user.foto }} style={styles.avatar} />
-                <Text style={styles.nome}>{user.nome}</Text>
+                <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+                <Text style={styles.nome}>{profile?.nome || authUser?.user_metadata?.name || "Usuário"}</Text>
+                <Text style={styles.email}>{authUser?.email}</Text>
+
+                <TouchableOpacity style={styles.smallButton} onPress={() => setAvatarModalVisible(true)}>
+                    <Text style={styles.smallButtonText}>Trocar avatar</Text>
+                </TouchableOpacity>
             </View>
 
-            {/* Cards */}
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Informações Pessoais</Text>
-                <Text>Nome: {user.nome}</Text>
-                <Text>Data de Nascimento: {user.data_nascimento ? new Date(user.data_nascimento).toLocaleDateString() : "-"}</Text>
-                <Text>Gênero: {user.genero || "-"}</Text>
+            {/* Status de memória */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Status da Memória</Text>
+                <Text>XP: {xp}</Text>
+                <Text>Nível: {getNivel(xp)}</Text>
             </View>
 
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Status de Memória</Text>
-                <Text>Nível de Memória: {user.nivel_memoria}</Text>
-                <Text>Diagnóstico: {user.deficit}</Text>
+            {/* Ofensiva de Jogos */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Ofensiva de Jogos</Text>
+                <Text style={styles.placeholder}>Ainda não há registros</Text>
             </View>
 
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Conta</Text>
-                <Text>Email: {user.email}</Text>
-                <Text>Telefone: {user.telefone || "(não cadastrado)"}</Text>
-                <Text>Conta criada em: {new Date(user.criado_em).toLocaleDateString()}</Text>
+            {/* Informações adicionais */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Informações adicionais</Text>
+                <Text>Gênero: {genero}</Text>
+                <Text>Déficit de memória: {deficit}</Text>
+                <Text>Conta criada em: {criado_em}</Text>
             </View>
 
-            {/* Botões */}
+            {/* Senhas */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Senhas</Text>
+                <Text style={styles.placeholder}>Suas senhas ficam salvas apenas no seu dispositivo</Text>
+            </View>
+
+            {/* Ações */}
             <View style={styles.actions}>
-                <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+                <TouchableOpacity style={styles.button}>
                     <Text style={styles.buttonText}>Editar Perfil</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={async () => await supabase.auth.signOut()}>
+
+                <TouchableOpacity onPress={() => handleLogout(navigation)} style={[styles.button, styles.logoutButton]}>
                     <Text style={styles.buttonText}>Sair</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Modal */}
-            <Modal visible={modalVisible} transparent animationType="slide">
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)" }}>
-                    <View style={{ width: "90%", backgroundColor: "#fff", borderRadius: 15, padding: 20 }}>
-                        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>Editar Perfil</Text>
+            {/* Modal de seleção de avatar */}
+            <Modal visible={avatarModalVisible} animationType="fade" transparent>
+                <View style={styles.avatarsModalOverlay}>
+                    <View style={styles.avatarsModal}>
+                        <Text style={styles.sectionTitle}>Escolha seu avatar</Text>
+                        <View style={styles.avatarsGrid}>
+                            {avatarChoices.map((opt) => (
+                                <TouchableOpacity
+                                    key={opt.path}
+                                    style={styles.avatarOption}
+                                    onPress={() => handleChooseAvatar(opt)}
+                                >
+                                    <Image
+                                        source={{ uri: opt.url }}
+                                        style={styles.avatarOptionImage}
+                                    />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
 
-                        {/* Foto atual */}
-                        <Image
-                            source={{ uri: newPhoto ? newPhoto.uri : user.foto }}
-                            style={{ width: 100, height: 100, borderRadius: 50, alignSelf: "center", marginBottom: 15 }}
-                        />
 
-                        {/* Botão selecionar nova foto */}
-                        <TouchableOpacity onPress={openImagePicker} style={{ marginBottom: 15 }}>
-                            <Text style={{ color: "#17285D", textAlign: "center" }}>
-                                {newPhoto ? "Nova foto selecionada" : "Selecionar nova foto"}
-                            </Text>
-                        </TouchableOpacity>
-
-                        {/* Input de nome */}
-                        <TextInput
-                            placeholder="Nome"
-                            value={newName || user.nome}
-                            onChangeText={setNewName}
-                            style={{ borderWidth: 1, borderColor: "#ccc", padding: 10, borderRadius: 8, marginBottom: 10 }}
-                        />
-
-                        {/* Botões */}
-                        <TouchableOpacity onPress={saveProfile} style={{ backgroundColor: "#8ec0c7", padding: 12, borderRadius: 10, marginBottom: 10 }}>
-                            <Text style={{ textAlign: "center", color: "#f0f0f0", fontWeight: "bold" }}>Salvar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setModalVisible(false)}>
-                            <Text style={{ textAlign: "center", color: "#17285D" }}>Cancelar</Text>
+                        <TouchableOpacity
+                            onPress={() => setAvatarModalVisible(false)}
+                            style={styles.closeModalButton}
+                        >
+                            <Text style={styles.smallButtonText}>Fechar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

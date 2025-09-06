@@ -96,7 +96,7 @@ function HeaderRight({ navigation }) {
                         navigation.navigate(ProfileScreen); // agora navega certo
                     }}
                     title="Perfil"
-                    titleStyle={{ color: 'white' }}
+                    titleStyle={{ color: 'white', fontStyle: 'italic' }}
                 />
                 <Divider />
                 <Menu.Item
@@ -115,15 +115,6 @@ function HeaderRight({ navigation }) {
                     }}
                     title="Modo escuro"
                     titleStyle={{ color: 'white', fontStyle: 'italic' }}
-                />
-                <Divider />
-                <Menu.Item
-                    onPress={() => {
-                        closeMenu();
-                        handleLogout(navigation);
-                    }}
-                    title="Sair"
-                    titleStyle={{ color: 'red' }}
                 />
             </Menu>
         </View>
