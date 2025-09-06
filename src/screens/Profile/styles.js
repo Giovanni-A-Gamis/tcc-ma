@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
         height: 120,
         borderRadius: 60,
         marginBottom: 10,
+        marginTop: 20,
     },
     nome: {
         fontSize: 20,
