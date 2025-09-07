@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Modal, TextInput } from "reac
 import { styles } from "./styles";
 import { getDiaries, createDiary, updateDiary } from "../../services/diaryService";
 import { supabase } from "../../lib/supabase";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Diary() {
     const [user, setUser] = useState(null);
@@ -109,7 +110,7 @@ export default function Diary() {
             </ScrollView>
 
             <TouchableOpacity style={styles.fab} onPress={handleOpenModal}>
-                <Text style={styles.fabText}>+</Text>
+                <Ionicons name="pencil" size={30} color="#FFF" />
             </TouchableOpacity>
 
             {/* Modal */}
