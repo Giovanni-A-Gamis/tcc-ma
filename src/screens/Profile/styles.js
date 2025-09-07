@@ -23,7 +23,14 @@ export const styles = StyleSheet.create({
     },
     nome: {
         fontSize: 20,
-        fontWeight: "700",
+        fontFamily: "Poppins_700Bold",
+    },
+    email: {
+        fontSize: 14,
+        color: "gray",
+        marginTop: -5,
+        marginBottom: 10,
+        fontFamily: "Poppins_400Regular",
     },
     card: {
         width: "100%",
@@ -39,7 +46,7 @@ export const styles = StyleSheet.create({
     },
     cardTitle: {
         fontSize: 16,
-        fontWeight: "700",
+        fontFamily: "Poppins_700Bold",
         marginBottom: 10,
     },
     actions: {
@@ -50,32 +57,29 @@ export const styles = StyleSheet.create({
         marginBottom: 40,
     },
     button: {
-        backgroundColor: "#4A90E2",
         paddingVertical: 12,
         paddingHorizontal: 30,
         borderRadius: 25,
     },
     logoutButton: {
-        backgroundColor: "#E74C3C",
+        backgroundColor: "#5C172C", // #E74C3C",
     },
     buttonText: {
         color: "#fff",
-        fontWeight: "700",
+        fontFamily: "Poppins_700Bold",
         fontSize: 16,
     },
-
-    // -------- ADIÇÕES --------
     smallButton: {
         marginTop: 8,
         paddingVertical: 8,
         paddingHorizontal: 14,
-        backgroundColor: "#4A90E2",
+        backgroundColor: "#17285D",
         borderRadius: 8,
         alignSelf: "center",
     },
     smallButtonText: {
         color: "#fff",
-        fontWeight: "600",
+        fontFamily: "Poppins_400Regular",
     },
     section: {
         marginTop: 20,
@@ -85,18 +89,24 @@ export const styles = StyleSheet.create({
         borderRadius: 15,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
         elevation: 2,
+        
     },
     sectionTitle: {
         fontSize: 16,
-        fontWeight: "700",
-        marginBottom: 8,
+        fontFamily: "Poppins_700Bold",
+        marginBottom: 5,
     },
     placeholder: {
         fontStyle: "italic",
         color: "gray",
+    },
+    sectionContent: {
+        fontSize: 14,
+        marginBottom: -4,
+        fontFamily: "Poppins_400Regular",
     },
     avatarsModalOverlay: {
         flex: 1,

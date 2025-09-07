@@ -63,15 +63,12 @@ export const styles = StyleSheet.create({
         color: "#555",
         fontFamily: 'Poppins_400Regular',
     },
-    
-    highlightCardContainer: {
+
+    highlightCard: {
         width: "100%",
         marginBottom: 12,
         marginTop: 20,
         height: 180,
-    },
-
-    highlightCard: {
         flex: 1,
         borderRadius: 20,
         overflow: "hidden",
@@ -91,7 +88,6 @@ export const styles = StyleSheet.create({
     highlightTitle: {
         color: "#fff",
         fontSize: 22,
-        fontWeight: "700",
         fontFamily: 'Poppins_700Bold',
     },
 

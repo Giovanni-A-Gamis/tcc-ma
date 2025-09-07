@@ -74,6 +74,7 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         width: "90%",
         elevation: 5,
+        
     },
 
     modalTitle: {
@@ -81,6 +82,7 @@ export const styles = StyleSheet.create({
         marginBottom: 12,
         color: "#333",
         textAlign: "center",
+        fontFamily: 'Poppins_700Bold'
     },
 
     textArea: {
@@ -92,6 +94,7 @@ export const styles = StyleSheet.create({
         marginBottom: 15,
         textAlignVertical: "top",
         backgroundColor: "#FAFAFA",
+        fontFamily: 'Poppins_400Regular'
     },
 
     saveButton: {
@@ -105,7 +108,7 @@ export const styles = StyleSheet.create({
     saveButtonText: {
         color: "#FFF",
         fontSize: 16,
-        fontWeight: "bold",
+        fontFamily: 'Poppins_700Bold'
     },
 
     cancelButton: {
@@ -117,7 +120,7 @@ export const styles = StyleSheet.create({
 
     cancelButtonText: {
         color: "#333",
-        fontSize: 16,
-        fontWeight: "bold",
+        fontSize: 14,
+        fontFamily: 'Poppins_700Bold'
     },
 });

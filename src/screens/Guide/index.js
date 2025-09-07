@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, ImageBackground } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, ScrollView, TouchableOpacity, ImageBackground, FlatList, Dimensions } from "react-native";
 import { getGuides } from "../../services/guideService";
 import { styles } from "./styles";
+
+const { width } = Dimensions.get("window");
+const HIGHLIGHT_CARD_WIDTH = width - 64; // Largura do card menos o padding horizontal do container
 
 export default function Guide({ navigation }) {
     const [guides, setGuides] = useState([]);
     const [highlightGuides, setHighlightGuides] = useState([]);
     const [highlightIndex, setHighlightIndex] = useState(0);
+    const flatListRef = useRef(null);
 
     useEffect(() => {
         const fetchGuides = async () => {
-            const data = await getGuides();
-            setGuides(data);
+        const data = await getGuides();
+        setGuides(data);
 
             if (data.length > 0) {
                 // Embaralhar e pegar 3 destaques
@@ -20,7 +24,26 @@ export default function Guide({ navigation }) {
             }
         };
         fetchGuides();
+
     }, []);
+
+    // Efeito para o carrossel rodar sozinho
+    useEffect(() => {
+        if (highlightGuides.length > 0) {
+            const interval = setInterval(() => {
+            setHighlightIndex(prevIndex => {
+                const newIndex = (prevIndex + 1) % highlightGuides.length;
+                // Rola para o novo item
+                flatListRef.current?.scrollToOffset({
+                    offset: newIndex * (HIGHLIGHT_CARD_WIDTH + 16), // Largura do card + margem
+                    animated: true,
+                });
+                return newIndex;
+            });
+        }, 5000); // 3 segundos
+        return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
+        }
+    }, [highlightGuides]);
 
     const categorias = [
         "Memória",
@@ -70,62 +93,54 @@ export default function Guide({ navigation }) {
             </ScrollView>
         </View>
         );
+
     };
+
+    const renderHighlightItem = ({ item }) => (
+        
+        <TouchableOpacity
+            style={[styles.highlightCard, { width: HIGHLIGHT_CARD_WIDTH, marginRight: 16 }]}
+            onPress={() => navigation.navigate("GuideDetail", { guia: item })}
+        >
+            <ImageBackground
+                source={{ uri: item.img_url }}
+                style={styles.highlightImage}
+                imageStyle={{ borderRadius: 20 }}
+            >
+                <View style={styles.highlightContent}>
+                    <Text style={styles.highlightTitle}>
+                        {item.titulo}
+                    </Text>
+                    <Text style={styles.highlightAuthor}>
+                        Por: {item.autor}
+                    </Text>
+                </View>
+            </ImageBackground>
+        </TouchableOpacity>
+    );
 
     return (
         <ScrollView style={styles.container}>
-            {/* Destaque do dia com setas dentro do card */}
+            {/* Destaque do dia com rolagem horizontal e automática */}
             {highlightGuides.length > 0 && (
-                <View style={{ marginBottom: 20, paddingHorizontal: 16 }}>
-                    <View style={styles.highlightCardContainer}>
-                        <TouchableOpacity
-                            style={styles.highlightCard}
-                            onPress={() =>
-                                navigation.navigate("GuideDetail", { guia: highlightGuides[highlightIndex] })
-                            }
-                        >
-                            <ImageBackground
-                                source={{ uri: highlightGuides[highlightIndex].img_url }}
-                                style={styles.highlightImage}
-                                imageStyle={{ borderRadius: 20 }}
-                            >
-                                <View style={styles.highlightContent}>
-                                    <Text style={styles.highlightTitle}>
-                                        {highlightGuides[highlightIndex].titulo}
-                                    </Text>
-                                    <Text style={styles.highlightAuthor}>
-                                        Por: {highlightGuides[highlightIndex].autor}
-                                    </Text>
-                                </View>
-
-                                {/* Setas dentro do card */}
-                                <TouchableOpacity
-                                    style={[styles.arrowContainer, { left: 10 }]}
-                                    onPress={() =>
-                                        setHighlightIndex(
-                                        (prev) => (prev - 1 + highlightGuides.length) % highlightGuides.length
-                                        )
-                                    }
-                                >
-                                    <Text style={styles.arrow}>{"<"}</Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    style={[styles.arrowContainer, { right: 10 }]}
-                                    onPress={() =>
-                                        setHighlightIndex((prev) => (prev + 1) % highlightGuides.length)
-                                    }
-                                >
-                                    <Text style={styles.arrow}>{">"}</Text>
-                                </TouchableOpacity>
-                            </ImageBackground>
-                        </TouchableOpacity>
-                    </View>
+                <View style={{ marginBottom: 20 }}>
+                    <FlatList
+                        ref={flatListRef}
+                        data={highlightGuides}
+                        renderItem={renderHighlightItem}
+                        keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        snapToInterval={HIGHLIGHT_CARD_WIDTH + 16}
+                        decelerationRate="fast"
+                        contentContainerStyle={{ paddingHorizontal: 16 }}
+                    />
                 </View>
             )}
 
-            {/* Seções por categoria */}
+                {/* Seções por categoria */}
             {categorias.map((cat) => renderSection(cat))}
         </ScrollView>
+
     );
 }
