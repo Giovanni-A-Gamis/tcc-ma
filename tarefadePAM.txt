@@ -1,0 +1,8 @@
+Caminho das tarefas: 
+
+./src/screens/Guide/index.js (Flatlist)
+./src/services/ (Serviços para requisição do banco de dados)
+./src/screens (Todas as páginas finalizadas possuem useEffect com o parâmetro fetch)
+|
+|
+-> Daily, Guide, GuideDetail, Login, Profile
