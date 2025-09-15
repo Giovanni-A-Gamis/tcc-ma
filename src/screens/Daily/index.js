@@ -13,12 +13,6 @@ export default function Diary() {
     const [todayDiary, setTodayDiary] = useState(null);
     const [expandedDiaries, setExpandedDiaries] = useState({});
 
-    // Normaliza a data de hoje
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-
     function toggleExpand(id) {
         setExpandedDiaries(prev => ({
             ...prev,
@@ -95,7 +89,7 @@ export default function Diary() {
                         <TouchableOpacity key={d.id} onPress={() => toggleExpand(d.id)}>
                             <View style={styles.diaryItem}>
                                 <Text style={styles.diaryDate}>
-                                    {dd}/{mm}/{yyyy}
+                                    {new Date(d.data_registro).toLocaleDateString()}
                                 </Text>
                                 <Text
                                     style={styles.diaryContent}
