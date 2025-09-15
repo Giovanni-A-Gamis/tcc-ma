@@ -97,6 +97,7 @@ export default function Step2Profile({ navigation, route }) {
                     </View>
 
                     {/* Seleção de gênero */}
+                    <Text style={{ fontSize: 15, fontFamily: 'Poppins_400Regular', color: '#17285D', marginBottom: 7 }}>Selecione seu gênero:</Text>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 25 }}>
                         {GENERO_OPTIONS.map(opt => (
                             <TouchableOpacity
