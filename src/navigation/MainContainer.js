@@ -14,13 +14,13 @@ import GameScreen from '../screens/Games/index';
 import AlarmScreen from '../screens/Alarm/index';
 import DailyScreen from '../screens/Daily/index';
 import ProfileScreen from '../screens/Profile/index';
+import AboutScreen from '../screens/About/index';
 
 const homeName = 'Home';
 const guideName = 'Guia';
 const gameName = 'Jogos';
 const alarmName = 'Alarme';
 const dailyName = 'Diário';
-const profileName = 'Perfil';
 
 const Tab = createBottomTabNavigator();
 
@@ -93,7 +93,7 @@ function HeaderRight({ navigation }) {
                 <Menu.Item
                     onPress={() => {
                         closeMenu();
-                        navigation.navigate(ProfileScreen); // agora navega certo
+                        navigation.navigate(ProfileScreen);
                     }}
                     title="Perfil"
                     titleStyle={{ color: 'white', fontStyle: 'italic' }}
@@ -102,7 +102,7 @@ function HeaderRight({ navigation }) {
                 <Menu.Item
                     onPress={() => {
                         closeMenu();
-                        console.log('Ir para Sobre Nós');
+                        navigation.navigate(AboutScreen);
                     }}
                     title="Sobre nós"
                     titleStyle={{ color: 'white', fontStyle: 'italic' }}

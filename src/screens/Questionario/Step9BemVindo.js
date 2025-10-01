@@ -1,106 +1,140 @@
-// StepProfile.js
-import React, { useState, useMemo } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView, Modal, Alert } from "react-native";
-import { styles } from "./styles";
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, ImageBackground, Alert } from 'react-native';
+import { styles } from './styles';
+import memooi from '../../../assets/memooi.png';
+import fundo2 from '../../../assets/fundoquest.jpg';
+import { supabase } from '../../lib/supabase';
 
-const AVATAR_OPTIONS = [
-    "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/1.png",
-    "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/2.png",
-    "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/3.png",
-    "https://xktxdedjpidgulnzykxq.supabase.co/storage/v1/object/public/avatars/4.png",
-];
+export default function Step9BemVindo({ navigation, route }) {
+    const [loading, setLoading] = useState(false);
+    const formData = route.params?.formData || {}; // tem tudo que coletaram nos steps
 
-export default function StepProfile({ navigation, route }) {
-    const formData = route.params?.formData || {};
-
-    const [nome, setNome] = useState(formData.nome || '');
-    const [genero, setGenero] = useState(formData.genero || '');
-    const [avatarModalVisible, setAvatarModalVisible] = useState(false);
-    const [foto, setFoto] = useState(formData.foto || AVATAR_OPTIONS[0]);
-
-    const avatarChoices = useMemo(() =>
-        AVATAR_OPTIONS.map(url => ({ url, path: url })), []
-    );
-
-    function next() {
-        if (!nome.trim()) {
-            Alert.alert('Atenção', 'Por favor preencha seu nome.');
-            return;
+    // validar campos mínimos antes de tentar criar
+    function validateForm() {
+        if (!formData.email || !formData.senha) {
+            Alert.alert('Erro', 'Email e senha são obrigatórios.');
+            return false;
         }
-
-        // Avança pro próximo step, carregando os dados atuais
-        navigation.navigate('Step9BemVindo', {
-            formData: { ...formData, nome: nome.trim(), genero, foto }
-        });
+        if (!formData.nome) {
+            // se o nome não foi coletado em algum step, pedir ao usuário
+            Alert.alert('Erro', 'Por favor preencha seu nome no passo anterior.');
+            return false;
+        }
+        return true;
     }
 
-    const handleChooseAvatar = (choice) => {
-        setFoto(choice.path);
-        setAvatarModalVisible(false);
-    };
+    async function finish() {
+        if (!validateForm()) return;
+
+        setLoading(true);
+
+        try {
+            // 1) Criar conta auth
+            const { data: signData, error: signError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.senha,
+            });
+
+            if (signError) {
+                // erro comum: email já em uso
+                console.error('Erro no signUp:', signError);
+                Alert.alert('Erro ao criar conta', signError.message || JSON.stringify(signError));
+                setLoading(false);
+                return;
+            }
+
+            // signData pode conter user ou next steps (verificação por e-mail)
+            const userId = signData?.user?.id;
+            if (!userId) {
+                // Em alguns setups, signUp retorna null user (ex.: confirmação obrigatória)
+                // tentamos pegar user do session
+                const { data: me } = await supabase.auth.getUser();
+                const uid = me?.data?.user?.id;
+                if (!uid) {
+                    Alert.alert('Erro', 'Não foi possível obter o id do usuário após signUp.');
+                    setLoading(false);
+                    return;
+                }
+                // override
+                signData.user = { id: uid };
+            }
+
+            const finalUserId = signData.user.id || (await supabase.auth.getUser()).data?.user?.id;
+
+            // 2) Inserir linha na tabela public.user
+            // Ajuste os campos conforme seu schema; obrigatórios: id e nome
+            const userRow = {
+                id: finalUserId,
+                nome: formData.nome,
+                email: formData.email,
+                telefone: formData.telefone || null,
+                genero: formData.genero || null,
+                data_nascimento: formData.data_nascimento || null,
+                foto: formData.foto || null,
+                xp: formData.xp || 0,
+            };
+
+            const { error: insertUserError } = await supabase.from('user').insert([userRow]);
+
+            if (insertUserError) {
+                console.error('Erro ao inserir public.user:', insertUserError);
+                // Se deu violação de constraint (ex.: user já existe), podemos tentar fazer update
+                if (insertUserError.code === '23505') {
+                    // unique violation: tenta update
+                    const { error: updErr } = await supabase
+                        .from('user')
+                        .update(userRow)
+                        .eq('id', finalUserId);
+                    if (updErr) throw updErr;
+                } else {
+                    throw insertUserError;
+                }
+            }
+
+            // 3) Inserir respostas do questionário (se existirem)
+            // Expectativa: formData.perguntas = [{ pergunta_id, resposta }, ...]
+            if (Array.isArray(formData.perguntas) && formData.perguntas.length > 0) {
+                const respostas = formData.perguntas.map((p) => ({
+                    user_id: finalUserId,
+                    pergunta_id: p.pergunta_id || null,
+                    resposta: typeof p.resposta === 'string' ? p.resposta : JSON.stringify(p.resposta),
+                }));
+
+                const { error: respError } = await supabase.from('questionario_respostas').insert(respostas);
+                if (respError) {
+                    console.error('Erro ao inserir respostas:', respError);
+                    // não aborta todo o fluxo — log e avisa
+                    Alert.alert('Aviso', 'Conta criada, mas falhou ao salvar respostas do questionário.');
+                }
+            }
+
+            Alert.alert('Sucesso', 'Conta criada com sucesso!');
+            // Redireciona para MainContainer (limpando pilha)
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'MainContainer' }],
+            });
+        } catch (err) {
+            console.error('Erro ao finalizar cadastro:', err);
+            Alert.alert('Erro', err.message || JSON.stringify(err));
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.avatarContainer}>
-                <Image source={{ uri: foto }} style={styles.avatar} />
-                <Text style={styles.label}>Nome</Text>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Digite seu nome"
-                        value={nome}
-                        onChangeText={setNome}
-                    />
+        <ImageBackground source={fundo2} resizeMode="cover" style={styles.background}>
+            <View style={styles.container1}>
+                <View style={styles.speechBubble}>
+                    <Text style={styles.speechText}>Agora sim, seja bem vindo ao nosso aplicativo!!</Text>
                 </View>
 
-                <Text style={styles.label}>Gênero</Text>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Digite seu gênero"
-                        value={genero}
-                        onChangeText={setGenero}
-                    />
-                </View>
+                <Image source={memooi} style={styles.image} resizeMode="contain" />
 
-                <TouchableOpacity style={styles.smallButton} onPress={() => setAvatarModalVisible(true)}>
-                    <Text style={styles.smallButtonText}>Escolher Avatar</Text>
+                <TouchableOpacity style={styles.button} onPress={finish} disabled={loading}>
+                    <Text style={styles.buttonText}>{loading ? 'Criando conta...' : 'Finalizar'}</Text>
                 </TouchableOpacity>
             </View>
-
-            <TouchableOpacity style={styles.button} onPress={next}>
-                <Text style={styles.buttonText}>Próximo</Text>
-            </TouchableOpacity>
-
-            <Modal visible={avatarModalVisible} animationType="fade" transparent>
-                <View style={styles.avatarsModalOverlay}>
-                    <View style={styles.avatarsModal}>
-                        <Text style={styles.sectionTitle}>Escolha seu avatar</Text>
-                        <View style={styles.avatarsGrid}>
-                            {avatarChoices.map((opt) => (
-                                <TouchableOpacity
-                                    key={opt.path}
-                                    style={styles.avatarOption}
-                                    onPress={() => handleChooseAvatar(opt)}
-                                >
-                                    <Image
-                                        source={{ uri: opt.url }}
-                                        style={styles.avatarOptionImage}
-                                    />
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-
-                        <TouchableOpacity
-                            onPress={() => setAvatarModalVisible(false)}
-                            style={styles.closeModalButton}
-                        >
-                            <Text style={styles.smallButtonText}>Fechar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-        </ScrollView>
+        </ImageBackground>
     );
 }
