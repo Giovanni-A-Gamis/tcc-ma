@@ -15,12 +15,14 @@ import AlarmScreen from '../screens/Alarm/index';
 import DailyScreen from '../screens/Daily/index';
 import ProfileScreen from '../screens/Profile/index';
 import AboutScreen from '../screens/About/index';
+import BleTestScreen from '../screens/BleTest/index';
 
 const homeName = 'Home';
 const guideName = 'Guia';
 const gameName = 'Jogos';
 const alarmName = 'Alarme';
 const dailyName = 'Diário';
+const bleName = 'BLE Test';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,6 +40,7 @@ export default function MainContainer() {
                     else if (route.name === gameName) iconName = focused ? 'game-controller' : 'game-controller-outline';
                     else if (route.name === alarmName) iconName = focused ? 'alarm' : 'alarm-outline';
                     else if (route.name === dailyName) iconName = focused ? 'book' : 'book-outline';
+                    else if (route.name === bleName) iconName = focused ? 'bluetooth' : 'bluetooth-outline';
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
 
@@ -64,6 +67,7 @@ export default function MainContainer() {
             <Tab.Screen name={guideName} component={GuideScreen} options={{ title: 'Guia' }} />
             <Tab.Screen name={alarmName} component={AlarmScreen} options={{ title: 'Alarmes' }} />
             <Tab.Screen name={dailyName} component={DailyScreen} options={{ title: 'Diário' }} />
+            <Tab.Screen name={bleName} component={BleTestScreen} options={{ title: 'BLE Test' }} />
             
 
 
