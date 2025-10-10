@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import { View, TouchableOpacity } from 'react-native';
 import { Menu, Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -15,7 +15,6 @@ import AlarmScreen from '../screens/Alarm/index';
 import DailyScreen from '../screens/Daily/index';
 import ProfileScreen from '../screens/Profile/index';
 import AboutScreen from '../screens/About/index';
-import BleTestScreen from '../screens/BleTest/index';
 
 const homeName = 'Home';
 const guideName = 'Guia';
@@ -66,10 +65,7 @@ export default function MainContainer() {
             <Tab.Screen name={gameName} component={GameScreen} options={{ title: 'Jogos' }} />
             <Tab.Screen name={guideName} component={GuideScreen} options={{ title: 'Guia' }} />
             <Tab.Screen name={alarmName} component={AlarmScreen} options={{ title: 'Alarmes' }} />
-            <Tab.Screen name={dailyName} component={DailyScreen} options={{ title: 'Diário' }} />
-            <Tab.Screen name={bleName} component={BleTestScreen} options={{ title: 'BLE Test' }} />
-            
-
+            <Tab.Screen name={dailyName} component={DailyScreen} options={{ title: 'Diário' }} />        
 
         </Tab.Navigator>
     );

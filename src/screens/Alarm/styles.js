@@ -28,13 +28,15 @@ export const styles = StyleSheet.create({
     },
     alarmTime: {
         fontSize: 28,
-        fontWeight: "bold",
+        marginBottom: -6,
         color: "#333",
+        fontFamily: 'Poppins_700Bold',
     },
     alarmTitle: {
         fontSize: 16,
         marginTop: 4,
         color: "#444",
+        fontFamily: 'Poppins_400Regular',
     },
     // NOVO: Estilo de texto para quando o alarme está inativo
     textInativo: {
@@ -49,10 +51,11 @@ export const styles = StyleSheet.create({
         marginRight: 8,
         fontSize: 14,
         color: "#AAA",
+        fontFamily: 'Poppins_400Regular',
     },
     diaAtivo: {
         color: "#000",
-        fontWeight: "bold",
+        fontFamily: 'Poppins_700Bold',
     },
     // NOVO: Estilo para o dia da semana quando o alarme está inativo
     diaInativo: {
@@ -62,9 +65,9 @@ export const styles = StyleSheet.create({
     // FAB
     fab: {
         position: "absolute",
+        bottom: 20,
         right: 20,
-        bottom: 30,
-        backgroundColor: "#3B82F6",
+        backgroundColor: "#8ec0c7",
         width: 60,
         height: 60,
         borderRadius: 30,

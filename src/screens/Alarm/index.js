@@ -10,6 +10,7 @@ import {
     Platform,
     Alert,
     PermissionsAndroid,
+    Image
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
@@ -224,6 +225,7 @@ export default function AlarmScreen() {
     const [ativo, setAtivo] = useState(true);
     const [user, setUser] = useState(null);
     const [editingAlarme, setEditingAlarme] = useState(null);
+    const [alarmeTocandoId, setAlarmeTocandoId] = useState(null);
 
     const diasSemana = [
         { id: 1, nome: "Dom" },
@@ -241,6 +243,20 @@ export default function AlarmScreen() {
             if (ok) fetchUser();
         })();
     }, []);
+
+    useEffect(() => {
+        const subscription = Notifications.addNotificationReceivedListener((notification) => {
+            // Supondo que o título ou corpo da notificação tenha o id ou título do alarme
+            const titulo = notification.request.content.title;
+            const alarme = alarmes.find(a => titulo.includes(a.titulo));
+            if (alarme) setAlarmeTocandoId(alarme.id);
+
+            if (isBleConnected) {
+                sendCommand("ON");
+            }
+        });
+        return () => subscription.remove();
+    }, [alarmes, isBleConnected, sendCommand]);
 
     useEffect(() => {
         const subscription = Notifications.addNotificationReceivedListener((notification) => {
@@ -485,6 +501,7 @@ export default function AlarmScreen() {
 
         return (
             <View style={styles.container}>
+
                 {/* Mostra status de conexão */}
                 <View style={{ padding: 5, backgroundColor: isBleConnected ? '#d1e7dd' : '#f8d7da', borderBottomWidth: 1, borderColor: '#ccc' }}>
                     <Text style={{ fontSize: 14, textAlign: 'center', fontWeight: 'bold' }}>
@@ -498,10 +515,23 @@ export default function AlarmScreen() {
                             <View style={styles.alarmCard}>
                                 <View style={styles.alarmHeader}>
                                     <Text style={styles.alarmTime}>{a.horario}</Text>
-                                    <Switch 
-                                        value={a.ativo} 
-                                        onValueChange={() => toggleAtivo(a)} 
-                                    />
+                                    {alarmeTocandoId === a.id ? (
+                                        <TouchableOpacity
+                                            style={{ marginLeft: 10, backgroundColor: "#F87171", padding: 8, borderRadius: 8 }}
+                                            onPress={async () => {
+                                                if (isBleConnected) await sendCommand("OFF");
+                                                await toggleAtivo(a); // desativa o alarme
+                                                setAlarmeTocandoId(null);
+                                            }}
+                                        >
+                                            <Text style={{ color: "#FFF", fontWeight: "bold" }}>Desligar</Text>
+                                        </TouchableOpacity>
+                                    ) : (
+                                        <Switch 
+                                            value={a.ativo} 
+                                            onValueChange={() => toggleAtivo(a)} 
+                                        />
+                                    )}
                                 </View>
                                 <Text style={styles.alarmTitle}>{a.titulo}</Text>
                                 <View style={styles.diasContainer}>
