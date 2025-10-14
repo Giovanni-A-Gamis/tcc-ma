@@ -7,6 +7,10 @@ import Login from '../screens/Login';
 import Profile from '../screens/Profile';
 import GuideDetail from '../screens/GuideDetail';
 import About from '../screens/About';
+import GamePlaceholder from '../screens/Games/GamePlaceholder';
+import GameIntro from '../screens/Games/GameIntro';
+import MemoryPairs from "../screens/Games/Play/MemoryPairs";
+import SequenceMemory from '../screens/Games/Play/SequenceMemory';
 
 import Step1Login from '../screens/Questionario/Step1Login';
 import Step2DadosPessoais from '../screens/Questionario/Step2DadosPessoais';
@@ -17,6 +21,7 @@ import Step6Memoria3 from '../screens/Questionario/Step6Memoria3';
 import Step7Memoria4 from '../screens/Questionario/Step7Memoria4';
 import Step8Memoria5 from '../screens/Questionario/Step8Memoria5';
 import Step9BemVindo from '../screens/Questionario/Step9BemVindo';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -30,7 +35,49 @@ export default function RootNavigator() {
             <Stack.Screen name="GuideDetail" component={GuideDetail} />
             <Stack.Screen name="About" component={About} options={{title: 'Sobre', headerShown: true, headerStyle: {backgroundColor: '#17285D', fontfamily: 'Poppins_700Bold'}, headerTintColor: 'white'}}/>
 
-            {/* Substitui o antigo "Questionario" pelos steps */}
+            {/*Games*/}
+
+            <Stack.Screen
+                name="MemoryPairs"
+                component={MemoryPairs}
+                options={{
+                    title: "Jogo da Memória",
+                    headerShown: true,
+                    headerStyle: { backgroundColor: "#17285D" },
+                    headerTintColor: "white",
+                }}
+            />
+
+            <Stack.Screen
+                name="SequenceMemory"
+                component={SequenceMemory}
+                options={{
+                    title: "Sequência Atencional",
+                    headerShown: true,
+                    headerStyle: { backgroundColor: "#17285D" },
+                    headerTintColor: "white",
+                    headerTitleStyle: { fontFamily: "Poppins_700Bold" },
+                }}
+            />
+
+            <Stack.Screen
+                name="GamePlaceholder"
+                component={GamePlaceholder}
+                options={{
+                    title: "Jogo",
+                    headerShown: true,
+                    headerStyle: { backgroundColor: "#17285D" },
+                    headerTintColor: "white",
+                    headerTitleStyle: { fontWeight: "bold", fontSize: 20, fontFamily: "Poppins_700Bold", color: "white" },
+                }}
+            />
+
+            <Stack.Screen
+                name="GameIntro"
+                component={GameIntro}
+            />
+
+
             <Stack.Screen name="Step1Login" component={Step1Login} />
             <Stack.Screen name="Step2DadosPessoais" component={Step2DadosPessoais} />
             <Stack.Screen name="Step3Pergunta" component={Step3Pergunta} />
