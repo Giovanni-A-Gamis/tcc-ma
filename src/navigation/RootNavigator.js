@@ -20,6 +20,7 @@ import Step5Memoria2 from '../screens/Questionario/Step5Memoria2';
 import Step6Memoria3 from '../screens/Questionario/Step6Memoria3';
 import Step7Memoria4 from '../screens/Questionario/Step7Memoria4';
 import Step8Memoria5 from '../screens/Questionario/Step8Memoria5';
+import Laudo from '../screens/Questionario/Laudo';
 import Step9BemVindo from '../screens/Questionario/Step9BemVindo';
 
 
@@ -86,6 +87,7 @@ export default function RootNavigator() {
             <Stack.Screen name="Step6Memoria3" component={Step6Memoria3} />
             <Stack.Screen name="Step7Memoria4" component={Step7Memoria4} />
             <Stack.Screen name="Step8Memoria5" component={Step8Memoria5} />
+            <Stack.Screen name="Laudo" component={Laudo} />
             <Stack.Screen name="Step9BemVindo" component={Step9BemVindo} />
 
             <Stack.Screen name="MainContainer" component={MainContainer} />

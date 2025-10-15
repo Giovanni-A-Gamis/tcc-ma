@@ -3,9 +3,9 @@ import { styles } from './styles';
 import memoduvida from '../../../assets/memoduvida.png';
 import fundo2 from '../../../assets/fundoquest.jpg';
 
-export default function Step3Pergunta({ navigation}) { 
+export default function Step3Pergunta({ navigation, route }) { 
     const next = () => {
-    navigation.navigate('Step4Memoria1');
+        navigation.navigate('Step4Memoria1', { formData: route.params?.formData });
     };
     return (
         <ImageBackground source={fundo2} resizeMode="cover" style={styles.background}>

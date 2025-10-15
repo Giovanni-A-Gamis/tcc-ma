@@ -143,4 +143,4 @@
               </View>
           </ImageBackground>
       );
-  }
+}

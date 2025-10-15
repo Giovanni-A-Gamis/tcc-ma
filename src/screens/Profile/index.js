@@ -78,11 +78,15 @@ export default function Profile() {
     const criado_em = profile?.criado_em
         ? new Date(profile.criado_em).toLocaleDateString("pt-BR")
         : "—";
+    const telefone = profile?.telefone ?? "—";
+    const data_nascimento = profile?.data_nascimento
+        ? new Date(profile.data_nascimento).toLocaleDateString("pt-BR")
+        : "—";
 
     const getNivel = (valorNivelMemoria) => {
-        if (valorNivelMemoria < 100) return "Iniciante";
-        if (valorNivelMemoria < 500) return "Intermediário";
-        if (valorNivelMemoria < 1000) return "Avançado";
+        if (valorNivelMemoria < 300) return "Iniciante";
+        if (valorNivelMemoria < 800) return "Intermediário";
+        if (valorNivelMemoria < 1200) return "Avançado";
         return "Mestre da Memória";
     };
 
@@ -126,7 +130,9 @@ export default function Profile() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Informações adicionais</Text>
                     <Text style={styles.sectionContent}>Gênero: {genero}</Text>
+                    <Text style={styles.sectionContent}>Data de nascimento: {data_nascimento}</Text>
                     <Text style={styles.sectionContent}>Déficit de memória: {deficit}</Text>
+                    <Text style={styles.sectionContent}>Telefone: {telefone}</Text>
                     <Text style={styles.sectionContent}>Conta criada em: {criado_em}</Text>
                 </View>
 
