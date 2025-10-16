@@ -91,7 +91,7 @@ export const styles = StyleSheet.create({
     },
     modalTitle: {
         fontSize: 20,
-        fontWeight: "bold",
+        fontFamily: 'Poppins_700Bold',
         marginBottom: 12,
         textAlign: "center",
     },
@@ -101,6 +101,7 @@ export const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 10,
         marginBottom: 10,
+        fontFamily: 'Poppins_400Regular',
     },
     sectionTitle: {
         fontSize: 16,
@@ -122,6 +123,7 @@ export const styles = StyleSheet.create({
     },
     diaTexto: {
         color: "#333",
+        fontFamily: 'Poppins_400Regular',
     },
     saveButton: {
         backgroundColor: "#3B82F6",
@@ -133,7 +135,7 @@ export const styles = StyleSheet.create({
     saveButtonText: {
         color: "#FFF",
         fontSize: 16,
-        fontWeight: "bold",
+        fontFamily: 'Poppins_700Bold',
     },
     cancelButton: {
         marginTop: 10,
@@ -141,5 +143,19 @@ export const styles = StyleSheet.create({
     },
     cancelButtonText: {
         color: "#555",
+        fontFamily: 'Poppins_400Regular',
     },
+    exludeButton: {
+        backgroundColor: "#EF4444",
+        padding: 8,
+        borderRadius: 8,
+        marginTop: 8,
+        alignItems: "center",
+    },
+    exludeButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+        fontFamily: 'Poppins_700Bold',
+    },
+    
 });

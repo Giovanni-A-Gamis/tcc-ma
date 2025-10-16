@@ -54,16 +54,18 @@ export default function Guide({ navigation }) {
         "Curiosidades",
     ];
 
+
     const renderSection = (categoria) => {
         const data = guides.filter((g) => g.categoria === categoria);
 
         if (data.length === 0) return null;
 
-        return (
+        return (           
             <View style={styles.section} key={categoria}>
                 <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Guias sobre {categoria}</Text>
                 </View>
+                
 
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {data.map((item) => (
@@ -108,6 +110,7 @@ export default function Guide({ navigation }) {
                 imageStyle={{ borderRadius: 20 }}
             >
                 <View style={styles.highlightContent}>
+                    
                     <Text style={styles.highlightTitle}>
                         {item.titulo}
                     </Text>

@@ -47,7 +47,6 @@ export default function MainContainer() {
                 headerStyle: { backgroundColor: '#17285D' },
                 headerTintColor: 'white',
                 headerTitleStyle: {
-                    fontWeight: 'bold',
                     fontSize: 20,
                     fontFamily: 'Poppins_700Bold',
                     color: 'white'

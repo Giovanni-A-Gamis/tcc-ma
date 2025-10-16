@@ -37,7 +37,12 @@ export default function GameIntro({ navigation, route }) {
                             navigation.navigate("MemoryPairs");
                         } else if (jogo.nome === "Sequência Atencional") {
                             navigation.navigate("SequenceMemory");
-                        } else {
+                        } else if (jogo.nome === "Quebra-Código") {
+                            navigation.navigate("QuebraCodigo");
+                        } else if (jogo.nome === "Palavras Fugitivas") {
+                            navigation.navigate("PalavrasFugidias");
+                        }
+                        else {
                             navigation.navigate("GamePlaceholder", { nome: jogo.nome });
                         }
 

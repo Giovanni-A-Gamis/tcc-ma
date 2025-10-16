@@ -123,4 +123,32 @@ export const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'Poppins_700Bold'
     },
+    todayDiaryItem: {
+        backgroundColor: '#f0f8ff',
+        borderLeftWidth: 4,
+        borderLeftColor: '#8ec0c7',
+        marginBottom: 12,
+    },
+    diaryHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    editButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#e3f2fd',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#8ec0c7',
+    },
+    editButtonText: {
+        marginLeft: 4,
+        fontSize: 12,
+        fontFamily: 'Poppins_700Bold',
+        color: '#17285D',
+    },
 });

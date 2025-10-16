@@ -11,6 +11,8 @@ import GamePlaceholder from '../screens/Games/GamePlaceholder';
 import GameIntro from '../screens/Games/GameIntro';
 import MemoryPairs from "../screens/Games/Play/MemoryPairs";
 import SequenceMemory from '../screens/Games/Play/SequenceMemory';
+import QuebraCodigo from '../screens/Games/Play/QuebraCodigo';
+import PalavrasFugidias from '../screens/Games/Play/PalavrasFugitivas';
 
 import Step1Login from '../screens/Questionario/Step1Login';
 import Step2DadosPessoais from '../screens/Questionario/Step2DadosPessoais';
@@ -32,9 +34,9 @@ export default function RootNavigator() {
         <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Welcome" component={BoasVindas} />
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Profile" component={Profile} options={{title: 'Perfil', headerShown: true, headerStyle: {backgroundColor: '#17285D', fontfamily: 'Poppins_700Bold'}, headerTintColor: 'white'}}/>
+            <Stack.Screen name="Profile" component={Profile} options={{title: 'Perfil', headerShown: true, headerStyle: {backgroundColor: '#17285D'}, headerTintColor: 'white', headerTitleStyle: {fontFamily: 'Poppins_700Bold'}}}/>
             <Stack.Screen name="GuideDetail" component={GuideDetail} />
-            <Stack.Screen name="About" component={About} options={{title: 'Sobre', headerShown: true, headerStyle: {backgroundColor: '#17285D', fontfamily: 'Poppins_700Bold'}, headerTintColor: 'white'}}/>
+            <Stack.Screen name="About" component={About} options={{title: 'Sobre', headerShown: true, headerStyle: {backgroundColor: '#17285D'}, headerTintColor: 'white', headerTitleStyle: {fontFamily: 'Poppins_700Bold' }}}/>
 
             {/*Games*/}
 
@@ -46,6 +48,7 @@ export default function RootNavigator() {
                     headerShown: true,
                     headerStyle: { backgroundColor: "#17285D" },
                     headerTintColor: "white",
+                    headerTitleStyle: { fontFamily: "Poppins_700Bold" },
                 }}
             />
 
@@ -62,6 +65,30 @@ export default function RootNavigator() {
             />
 
             <Stack.Screen
+                name="QuebraCodigo"
+                component={QuebraCodigo}
+                options={{
+                    title: "Quebra-Código",
+                    headerShown: true,
+                    headerStyle: { backgroundColor: "#17285D" },
+                    headerTintColor: "white",
+                    headerTitleStyle: { fontFamily: "Poppins_700Bold" },
+                }}
+            />
+
+            <Stack.Screen
+                name="PalavrasFugidias"
+                component={PalavrasFugidias}
+                options={{
+                    title: "Palavras Fugidias",
+                    headerShown: true,
+                    headerStyle: { backgroundColor: "#17285D" },
+                    headerTintColor: "white",
+                    headerTitleStyle: { fontFamily: "Poppins_700Bold" },
+                }}
+            />
+
+            <Stack.Screen
                 name="GamePlaceholder"
                 component={GamePlaceholder}
                 options={{
@@ -69,7 +96,7 @@ export default function RootNavigator() {
                     headerShown: true,
                     headerStyle: { backgroundColor: "#17285D" },
                     headerTintColor: "white",
-                    headerTitleStyle: { fontWeight: "bold", fontSize: 20, fontFamily: "Poppins_700Bold", color: "white" },
+                    headerTitleStyle: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "white" },
                 }}
             />
 
@@ -90,7 +117,7 @@ export default function RootNavigator() {
             <Stack.Screen name="Laudo" component={Laudo} />
             <Stack.Screen name="Step9BemVindo" component={Step9BemVindo} />
 
-            <Stack.Screen name="MainContainer" component={MainContainer} />
+            <Stack.Screen name="MainContainer" component={MainContainer} options={{ headerTitleStyle: { fontSize: 20, fontFamily: "Poppins_700Bold", color: "white" }}}/>
         </Stack.Navigator>
     )
 }

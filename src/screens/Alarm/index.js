@@ -20,6 +20,10 @@ import * as Notifications from "expo-notifications";
 import { BleManager } from "react-native-ble-plx";
 import { encode as btoa } from "base-64";
 
+import bracelete from "../../../assets/bracogpt.png";
+import blue from "../../../assets/blueazul.png";
+import seta from "../../../assets/seta.png";
+
 // ========================================================
 // CONFIGURAÇÕES E SERVIÇOS BLE (INTEGRADOS NO ARQUIVO)
 // ========================================================
@@ -501,7 +505,20 @@ export default function AlarmScreen() {
 
         return (
             <View style={styles.container}>
+                <Text style={{
+                    fontSize: 22,
+                    fontFamily: "Poppins_700Bold",
+                    color: "#17285D",
+                    marginBottom: 20,
+                    textAlign: "center",}}>
+                        Programe seus alarmes
+                </Text> 
 
+                <View style={{ alignItems: 'center', marginBottom: 10, flexDirection: 'row', justifyContent: 'center' }}>
+                    <Image source={bracelete} style={{ width: 140, height: 110, resizeMode: 'contain'}} />
+                    <Image source={seta} style={{ width: 55, height: 100, resizeMode: 'contain' }} />
+                    <Image source={blue} style={{ width: 140, height: 100, resizeMode: 'contain'}} />
+                </View>
                 {/* Mostra status de conexão */}
                 <View style={{ padding: 5, backgroundColor: isBleConnected ? '#d1e7dd' : '#f8d7da', borderBottomWidth: 1, borderColor: '#ccc' }}>
                     <Text style={{ fontSize: 14, textAlign: 'center', fontWeight: 'bold' }}>
@@ -603,10 +620,10 @@ export default function AlarmScreen() {
 
                             {editingAlarme && (
                                 <TouchableOpacity
-                                    style={[styles.cancelButton, { backgroundColor: "#F87171" }]}
+                                    style={[styles.exludeButton]}
                                     onPress={excluirAlarme}
                                 >
-                                    <Text style={[styles.cancelButtonText, { color: "#FFF" }]}>Excluir</Text>
+                                    <Text style={[styles.excludeButtonText, { color: "#FFF" }]}>Excluir</Text>
                                 </TouchableOpacity>
                             )}
 
