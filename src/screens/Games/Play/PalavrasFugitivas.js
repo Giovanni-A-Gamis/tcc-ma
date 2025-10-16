@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         fontFamily: "Poppins_700Bold",
         color: "#17285D",
         textAlign: "center",
-        marginBottom: 30,
+        marginBottom: 50,
     },
     options: {
         flexDirection: "row",
