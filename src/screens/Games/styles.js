@@ -1,41 +1,188 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f7f9fb",
-        padding: 16,
+        backgroundColor: "#f8fafc",
+    },
+    header: {
+        backgroundColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        paddingHorizontal: 20,
+        paddingTop: 50,
+        paddingBottom: 30,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        marginBottom: 20,
+    },
+    headerContent: {
+        alignItems: "center",
+        marginBottom: 20,
     },
     title: {
-        fontSize: 22,
+        fontSize: 28,
         fontFamily: "Poppins_700Bold",
         color: "#17285D",
-        marginBottom: 20,
+        textAlign: "center",
+        marginBottom: 8,
+        textShadowColor: "rgba(0,0,0,0.3)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
+    subtitle: {
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#17285D",
         textAlign: "center",
     },
-    card: {
-        borderRadius: 12,
+    statsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginTop: 10,
+    },
+    statItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "rgba(255,255,255,0.9)",
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        elevation: 3,
+        marginBottom: -15,
+    },
+    statText: {
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        marginLeft: 6,
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#666",
+    },
+    gamesGrid: {
+        paddingHorizontal: 15,
+        paddingBottom: 20,
+    },
+    gameCard: {
+        height: 200,
+        borderRadius: 20,
         overflow: "hidden",
         marginBottom: 16,
         backgroundColor: "#fff",
-        elevation: 3,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 8,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 16,
+        elevation: 8,
+        transform: [{ scale: 1 }],
     },
-    cardImage: {
-        height: 180,
-        justifyContent: "flex-end",
+    gameCardImage: {
+        flex: 1,
+        justifyContent: "space-between",
     },
-    overlay: {
-        backgroundColor: "rgba(0,0,0,0.4)",
-        padding: 10,
+    gameCardImageStyle: {
+        borderRadius: 20,
     },
-    cardTitle: {
-        color: "#fff",
-        fontSize: 18,
+    gradientOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%)",
+        borderRadius: 20,
+    },
+    gameCardContent: {
+        flex: 1,
+        padding: 16,
+        justifyContent: "space-between",
+    },
+    difficultyBadge: {
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-start",
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 12,
+        backgroundColor: "#4CAF50",
+        marginBottom: 8,
+    },
+    difficultyIcon: {
+        fontSize: 12,
+        marginRight: 4,
+    },
+    difficultyText: {
+        fontSize: 12,
         fontFamily: "Poppins_700Bold",
+        color: "#fff",
+        textTransform: "capitalize",
     },
-    cardSubtitle: {
-        color: "#ddd",
+    gameInfo: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    gameName: {
+        fontSize: 22,
+        fontFamily: "Poppins_700Bold",
+        color: "#fff",
+        marginBottom: 4,
+        textShadowColor: "rgba(0,0,0,0.5)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
+    gameCategory: {
+        fontSize: 14,
+        fontFamily: "Poppins_500Medium",
+        color: "rgba(255,255,255,0.9)",
+        marginBottom: 8,
+        textShadowColor: "rgba(0,0,0,0.5)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
+    },
+    gameDescription: {
+        fontSize: 12,
+        fontFamily: "Poppins_400Regular",
+        color: "rgba(255,255,255,0.8)",
+        lineHeight: 16,
+    },
+    playButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-end",
+        backgroundColor: "rgba(255,255,255,0.2)",
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.3)",
+    },
+    playButtonText: {
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
+        color: "#fff",
+        marginLeft: 6,
+    },
+    footer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FFF9E6",
+        marginHorizontal: 20,
+        marginBottom: 30,
+        padding: 16,
+        borderRadius: 16,
+        borderLeftWidth: 4,
+        borderLeftColor: "#FFD700",
+    },
+    footerText: {
         fontSize: 14,
         fontFamily: "Poppins_400Regular",
+        color: "#5D4037",
+        marginLeft: 8,
+        flex: 1,
+        textAlign: "center",
     },
-    });
+});

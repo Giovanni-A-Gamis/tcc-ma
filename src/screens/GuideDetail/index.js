@@ -1,35 +1,142 @@
-import { TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // ou outro ícone que preferir
-import { ScrollView, View, Text, ImageBackground } from "react-native";
+import React, { useRef } from "react";
+import { 
+    TouchableOpacity, 
+    ScrollView, 
+    View, 
+    Text, 
+    ImageBackground,
+    Animated 
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { styles } from "./styles";
 
 export default function GuideDetail({ navigation, route }) {
     const { guia } = route.params;
+    const scrollY = useRef(new Animated.Value(0)).current;
+
+    const headerOpacity = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+    });
+
+    const getCategoryColor = (category) => {
+        const colors = {
+            "Memória": "#667eea",
+            "Atenção": "#f093fb", 
+            "Concentração": "#4facfe",
+            "Reação": "#43e97b",
+            "Lógica": "#fa709a",
+            "Curiosidades": "#ffd200"
+        };
+        return colors[category] || "#666";
+    };
 
     return (
-        <ScrollView style={styles.container}>
-            <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => navigation.goBack()}
-            >
-                <Ionicons name="arrow-back" size={24} color="#fff" />
-                <Text style={{ color: "#fff", marginLeft: 6, fontFamily: 'Poppins_400Regular' }}>Voltar</Text>
-            </TouchableOpacity>
+        <View style={styles.container}>
+            {/* Header Fixo */}
+            <Animated.View style={[styles.fixedHeader, { opacity: headerOpacity }]}>
+                <TouchableOpacity
+                    style={styles.fixedBackButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Ionicons name="arrow-back" size={24} color="#17285D" />
+                </TouchableOpacity>
+                <Text style={styles.fixedTitle} numberOfLines={1}>
+                    {guia.titulo}
+                </Text>
+                <View style={styles.fixedPlaceholder} />
+            </Animated.View>
 
-            <ImageBackground 
-                source={{ uri: guia.img_url }} 
-                style={styles.headerImage}
-                imageStyle={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+            <Animated.ScrollView 
+                style={styles.scrollView}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: true }
+                )}
+                scrollEventThrottle={16}
             >
-                <View style={styles.headerContent}>
-                    <Text style={styles.title}>{guia.titulo}</Text>
-                    <Text style={styles.author}>Por {guia.autor}</Text>
+                {/* Hero Section */}
+                <ImageBackground 
+                    source={{ uri: guia.img_url }} 
+                    style={styles.heroImage}
+                >
+                    <View style={styles.heroOverlay} />
+                    
+                    {/* Botão Voltar Flutuante */}
+                    <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={() => navigation.goBack()}
+                    >
+                        <Ionicons name="arrow-back" size={24} color="#fff" />
+                    </TouchableOpacity>
+
+                    {/* Conteúdo do Hero */}
+                    <View style={styles.heroContent}>
+                        <View style={[
+                            styles.categoryBadge,
+                            { backgroundColor: getCategoryColor(guia.categoria) }
+                        ]}>
+                            <Text style={styles.categoryText}>{guia.categoria}</Text>
+                        </View>
+                        
+                        <Text style={styles.title}>{guia.titulo}</Text>
+                        
+                        <View style={styles.authorContainer}>
+                            <Ionicons name="person-circle" size={20} color="rgba(255,255,255,0.9)" />
+                            <Text style={styles.author}>Por {guia.autor}</Text>
+                        </View>
+
+                        <View style={styles.metaInfo}>
+                            <View style={styles.metaItem}>
+                                <Ionicons name="time" size={14} color="rgba(255,255,255,0.8)" />
+                                <Text style={styles.metaText}>5 min de leitura</Text>
+                            </View>
+                            <View style={styles.metaItem}>
+                                <Ionicons name="eye" size={14} color="rgba(255,255,255,0.8)" />
+                                <Text style={styles.metaText}>Conhecimento</Text>
+                            </View>
+                        </View>
+                    </View>
+                </ImageBackground>
+
+                {/* Conteúdo do Guia */}
+                <View style={styles.content}>
+                    <View style={styles.contentHeader}>
+                        <Text style={styles.contentTitle}>Sobre este guia</Text>
+                        <View style={styles.divider} />
+                    </View>
+                    
+                    <Text style={styles.text}>
+                        {guia.conteudo}
+                    </Text>
+
+                    {/* Dicas Section */}
+                    <View style={styles.tipsSection}>
+                        <View style={styles.tipsHeader}>
+                            <Ionicons name="bulb" size={24} color="#FFD700" />
+                            <Text style={styles.tipsTitle}>Dica Importante</Text>
+                        </View>
+                        <Text style={styles.tipText}>
+                            Pratique estas técnicas regularmente para obter os melhores resultados na sua memória.
+                        </Text>
+                    </View>
+
+                    {/* Call to Action */}
+                    <View style={styles.ctaSection}>
+                        <Text style={styles.ctaTitle}>Gostou deste guia?</Text>
+                        <Text style={styles.ctaText}>
+                            Explore mais conteúdos para continuar fortalecendo sua mente.
+                        </Text>
+                        <TouchableOpacity 
+                            style={styles.ctaButton}
+                            onPress={() => navigation.navigate("Guide")}
+                        >
+                            <Text style={styles.ctaButtonText}>Ver Mais Guias</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </ImageBackground>
-
-            <View style={styles.content}>
-                <Text style={styles.text}>{guia.conteudo}</Text>
-            </View>
-        </ScrollView>
+            </Animated.ScrollView>
+        </View>
     );
 }

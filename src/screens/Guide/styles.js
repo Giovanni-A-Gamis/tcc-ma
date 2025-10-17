@@ -1,113 +1,278 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f0f0f0",
-        paddingHorizontal: 16,
+        backgroundColor: "#f8fafc",
     },
-    
-    section: {
-        marginBottom: 24,
+    header: {
+        backgroundColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        paddingHorizontal: 20,
+        paddingTop: 50,
+        paddingBottom: 30,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
     },
-
+    headerContent: {
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    headerTitle: {
+        fontSize: 28,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        textAlign: "center",
+        marginBottom: 8,
+        textShadowColor: "rgba(0,0,0,0.3)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
+    headerSubtitle: {
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#17285D",
+        textAlign: "center",
+    },
+    statsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginTop: 10,
+    },
+    statItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "rgba(255,255,255,0.9)",
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        elevation: 3,
+        marginBottom: -15,
+    },
+    statText: {
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        marginLeft: 6,
+    },
+    highlightSection: {
+        marginTop: 20,
+        marginBottom: 10,
+    },
     sectionHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 10,
+        marginBottom: 15,
+        paddingHorizontal: 20,
     },
-
+    sectionTitleContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    sectionIcon: {
+        fontSize: 20,
+        marginRight: 8,
+    },
     sectionTitle: {
-        fontSize: 18,
-        fontFamily: 'Poppins_700Bold',
-        color: "#333",
+        fontSize: 20,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
     },
-
+    highlightSectionTitle: {
+        fontSize: 20,
+        fontFamily: "Poppins_700Bold",
+        color: "#FF6B6B",
+        marginLeft: 8,
+    },
     seeMore: {
         fontSize: 14,
+        fontFamily: "Poppins_600SemiBold",
         color: "#4A90E2",
-        fontWeight: "500",
     },
-
-    card: {
-        width: 160,
-        height: 110,
-        borderRadius: 12,
+    pagination: {
+        flexDirection: "row",
+    },
+    paginationDot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        backgroundColor: "#ccc",
+        marginHorizontal: 2,
+    },
+    paginationDotActive: {
+        backgroundColor: "#FF6B6B",
+        width: 12,
+    },
+    highlightList: {
+        paddingHorizontal: 20,
+    },
+    highlightCard: {
+        height: 200,
+        borderRadius: 20,
         overflow: "hidden",
-        marginRight: 10,
+        marginRight: 16,
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.2,
+        shadowRadius: 16,
+        elevation: 8,
     },
-
+    highlightImage: {
+        flex: 1,
+        justifyContent: "space-between",
+    },
+    highlightImageStyle: {
+        borderRadius: 20,
+    },
+    highlightGradient: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%)",
+        borderRadius: 20,
+    },
+    highlightContent: {
+        flex: 1,
+        padding: 16,
+        justifyContent: "space-between",
+    },
+    highlightBadge: {
+        flexDirection: "row",
+        alignItems: "center",
+        alignSelf: "flex-start",
+        backgroundColor: "rgba(255,255,255,0.2)",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
+    },
+    highlightBadgeText: {
+        fontSize: 12,
+        fontFamily: "Poppins_600SemiBold",
+        color: "#fff",
+        marginLeft: 4,
+    },
+    highlightTitle: {
+        fontSize: 20,
+        fontFamily: "Poppins_700Bold",
+        color: "#fff",
+        textShadowColor: "rgba(0,0,0,0.5)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+        lineHeight: 24,
+    },
+    highlightFooter: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    authorInfo: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    highlightAuthor: {
+        fontSize: 14,
+        fontFamily: "Poppins_400Regular",
+        color: "rgba(255,255,255,0.9)",
+        marginLeft: 4,
+    },
+    readTime: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "rgba(255,255,255,0.2)",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 8,
+    },
+    readTimeText: {
+        fontSize: 12,
+        fontFamily: "Poppins_400Regular",
+        color: "rgba(255,255,255,0.9)",
+        marginLeft: 4,
+    },
+    categoriesContainer: {
+        paddingBottom: 20,
+    },
+    section: {
+        marginBottom: 24,
+    },
+    horizontalScroll: {
+        paddingHorizontal: 20,
+    },
+    card: {
+        width: 180,
+        height: 140,
+        borderRadius: 16,
+        overflow: "hidden",
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
+        borderLeftWidth: 4,
+    },
     cardImage: {
         flex: 1,
         justifyContent: "flex-end",
-        padding: 8,
     },
-
+    cardImageStyle: {
+        borderRadius: 16,
+    },
+    cardGradient: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%)",
+        borderRadius: 16,
+    },
     cardContent: {
-        backgroundColor: "rgba(0,0,0,0.4)",
-        padding: 4,
-        borderRadius: 5,
+        padding: 12,
     },
-
+    cardCategory: {
+        marginBottom: 8,
+    },
+    categoryText: {
+        fontSize: 12,
+        fontFamily: "Poppins_600SemiBold",
+        textTransform: "uppercase",
+    },
     cardTitle: {
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
         color: "#fff",
-        fontSize: 15,
-        fontWeight: "500",
-        textAlign: "center",
-        fontFamily: 'Poppins_400Regular',
+        lineHeight: 18,
+        textShadowColor: "rgba(0,0,0,0.5)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
+    },
+    cardFooter: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 8,
     },
     cardAuthor: {
-        marginTop: 4,
-        fontSize: 13,
-        color: "#555",
-        fontFamily: 'Poppins_400Regular',
+        fontSize: 11,
+        fontFamily: "Poppins_400Regular",
+        color: "rgba(255,255,255,0.8)",
+        marginLeft: 4,
     },
-
-    highlightCard: {
-        width: "100%",
-        marginBottom: 12,
-        marginTop: 20,
-        height: 180,
-        flex: 1,
-        borderRadius: 20,
-        overflow: "hidden",
-        position: "relative",
-    },
-
-    highlightImage: {
-        flex: 1,
-        justifyContent: "flex-end",
-    },
-
-    highlightContent: {
-        backgroundColor: "rgba(0,0,0,0.4)",
+    footer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FFF9E6",
+        marginHorizontal: 20,
+        marginBottom: 30,
         padding: 16,
+        borderRadius: 16,
+        borderLeftWidth: 4,
+        borderLeftColor: "#FFD700",
     },
-
-    highlightTitle: {
-        color: "#fff",
-        fontSize: 22,
-        fontFamily: 'Poppins_700Bold',
-    },
-
-    highlightAuthor: {
-        color: "#fff",
+    footerText: {
         fontSize: 14,
-        marginTop: 4,
-        fontFamily: 'Poppins_400Regular',
-    },
-
-    arrowContainer: {
-        position: "absolute",
-        top: "50%",
-        transform: [{ translateY: -12 }],
-        borderRadius: 20,
-    },
-
-    arrow: {
-        fontSize: 30,
-        fontFamily: 'Poppins_700Bold',
-        color: "#17285D",
+        fontFamily: "Poppins_400Regular",
+        color: "#5D4037",
+        marginLeft: 8,
+        flex: 1,
+        textAlign: "center",
     },
 });
