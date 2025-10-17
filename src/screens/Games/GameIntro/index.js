@@ -41,6 +41,8 @@ export default function GameIntro({ navigation, route }) {
                             navigation.navigate("QuebraCodigo");
                         } else if (jogo.nome === "Palavras Fugitivas") {
                             navigation.navigate("PalavrasFugidias");
+                        } else if (jogo.nome === "Efeito Stroop") {
+                            navigation.navigate("Stroop");
                         }
                         else {
                             navigation.navigate("GamePlaceholder", { nome: jogo.nome });

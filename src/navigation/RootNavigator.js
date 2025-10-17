@@ -13,6 +13,7 @@ import MemoryPairs from "../screens/Games/Play/MemoryPairs";
 import SequenceMemory from '../screens/Games/Play/SequenceMemory';
 import QuebraCodigo from '../screens/Games/Play/QuebraCodigo';
 import PalavrasFugidias from '../screens/Games/Play/PalavrasFugitivas';
+import StroopGame from '../screens/Games/Play/Stroop';
 
 import Step1Login from '../screens/Questionario/Step1Login';
 import Step2DadosPessoais from '../screens/Questionario/Step2DadosPessoais';
@@ -81,6 +82,18 @@ export default function RootNavigator() {
                 component={PalavrasFugidias}
                 options={{
                     title: "Palavras Fugidias",
+                    headerShown: true,
+                    headerStyle: { backgroundColor: "#17285D" },
+                    headerTintColor: "white",
+                    headerTitleStyle: { fontFamily: "Poppins_700Bold" },
+                }}
+            />
+
+            <Stack.Screen
+                name="Stroop"
+                component={StroopGame}
+                options={{
+                    title: "Efeito Stroop",
                     headerShown: true,
                     headerStyle: { backgroundColor: "#17285D" },
                     headerTintColor: "white",
