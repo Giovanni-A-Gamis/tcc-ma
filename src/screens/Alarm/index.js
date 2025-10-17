@@ -10,54 +10,30 @@ import {
     Platform,
     Alert,
     PermissionsAndroid,
-    Image
+    Image,
+    Animated
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { supabase } from "../../lib/supabase";
-import { styles } from "./styles"; // Certifique-se de que o caminho para 'styles' está correto
+import { styles } from "./styles";
 import * as Notifications from "expo-notifications";
 import { BleManager } from "react-native-ble-plx";
 import { encode as btoa } from "base-64";
 
-import bracelete from "../../../assets/bracogpt.png";
-import blue from "../../../assets/blueazul.png";
-import seta from "../../../assets/seta.png";
-
-// ========================================================
-// CONFIGURAÇÕES E SERVIÇOS BLE (INTEGRADOS NO ARQUIVO)
-// ========================================================
-
-// Definições de UUIDs e ID do ESP32
+// Configurações BLE (mantidas do código anterior)
 export const SERVICE_UUID = "12345678-1234-1234-1234-1234567890ab";
 export const CHARACTERISTIC_UUID_CMD = "87654321-4321-4321-4321-ba0987654321"; 
 export const CHARACTERISTIC_UUID_NOTIFY = "BA987654-3210-FEDC-BA98-76543210FEDC"; 
-export const ESP32_ID = "68:25:DD:20:A9:E2"; // Mantenha o ID real do seu ESP32 aqui
+export const ESP32_ID = "68:25:DD:20:A9:E2";
 
 const manager = new BleManager();
 
-// Função para decodificar base64 (adaptada para React Native)
-function atob(b64) {
-    // É necessário que o Buffer esteja disponível no ambiente (ou que você use uma alternativa)
-    // Para muitos ambientes RN, Buffer é injetado, mas pode exigir polyfills
-    if (typeof Buffer !== 'undefined') {
-        return Buffer.from(b64, 'base64').toString('utf8');
-    }
-    // Caso o Buffer não esteja disponível, pode ser necessário um método de decodificação diferente
-    // Depende da sua configuração específica de polyfill no React Native
-    return b64; 
-}
-
-/**
- * Hook para gerenciar a conexão BLE com o ESP32.
- * @param {function(string): void} onAlarmReceived - Callback para quando o ESP32 notificar.
- */
+// Hook BLE (mantido do código anterior)
 function useBleService(onAlarmReceived) {
     const [connectedDevice, setConnectedDevice] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const scanTimeout = useRef(null);
-    const alarmSubscription = useRef(null);
-    // Não precisamos de 'status' e 'isScanning' se o scan for automático
 
     const requestPermissions = async () => {
         if (Platform.OS === "android") {
@@ -73,7 +49,6 @@ function useBleService(onAlarmReceived) {
 
     const connectToDevice = async (deviceId) => {
         manager.stopDeviceScan();
-
         try {
             const device = await manager.connectToDevice(deviceId, { timeout: 5000 });
             await device.requestMTU(517);
@@ -82,9 +57,8 @@ function useBleService(onAlarmReceived) {
             setConnectedDevice(device);
             setIsConnected(true);
             console.log("✅ BLE: Conectado a:", device.id);
-
         } catch (err) {
-            console.log("❌ BLE: Falha na conexão ou na escuta.", err.message);
+            console.log("❌ BLE: Falha na conexão.", err.message);
             setIsConnected(false);
             setConnectedDevice(null);
         }
@@ -110,7 +84,6 @@ function useBleService(onAlarmReceived) {
             }
         });
 
-        // Timeout para parar o scan, mesmo que não encontre
         if (scanTimeout.current) clearTimeout(scanTimeout.current);
         scanTimeout.current = setTimeout(() => {
             manager.stopDeviceScan();
@@ -118,10 +91,6 @@ function useBleService(onAlarmReceived) {
         }, 10000); 
     };
 
-    /**
-     * Envia um comando em string para a característica BLE.
-     * Exportamos APENAS esta função para fora do hook.
-     */
     const sendCommand = async (command) => {
         if (!connectedDevice) {
             console.log("❌ BLE: Não conectado. Impossível enviar comando.");
@@ -130,8 +99,8 @@ function useBleService(onAlarmReceived) {
         try {
             await connectedDevice.writeCharacteristicWithResponseForService(
                 SERVICE_UUID,
-                CHARACTERISTIC_UUID_CMD, // Característica de Comando
-                btoa(command) // Envia o comando codificado em Base64
+                CHARACTERISTIC_UUID_CMD,
+                btoa(command)
             );
             console.log("➡️ BLE: Comando enviado:", command);
         } catch (err) {
@@ -139,61 +108,20 @@ function useBleService(onAlarmReceived) {
         }
     };
     
-    // Inicia o scan automaticamente quando o componente é montado
     useEffect(() => {
         scanForDevicesAndConnect();
         return () => {
-            if (alarmSubscription.current) alarmSubscription.current.remove();
             if (scanTimeout.current) clearTimeout(scanTimeout.current);
         };
-    }, []); 
+    }, []);
 
-    // O hook retorna apenas as funções e status que o componente precisa
     return {
         isConnected,
         sendCommand,
     };
 }
 
-
-// ========================================================
-// FUNÇÃO DE NOTIFICAÇÃO POR BLE (Para Notificações Recebidas)
-// ========================================================
-async function triggerBleNotification(data) {
-    console.log("📢 Disparando Notificação Local pelo BLE:", data);
-    await Notifications.scheduleNotificationAsync({
-        content: {
-            title: "🚨 ALARME ACIONADO PELO DISPOSITIVO",
-            body: `Seu ESP32 enviou o sinal de alarme! Mensagem: ${data}`,
-            sound: "default",
-            priority: Notifications.AndroidNotificationPriority.MAX,
-        },
-        trigger: null,
-    });
-}
-
-// ========================================================
-// CONFIGURAÇÕES GLOBAIS DE NOTIFICAÇÃO
-// ========================================================
-
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-    }),
-});
-
-if (Platform.OS === "android") {
-    Notifications.setNotificationChannelAsync("alarm-channel", {
-        name: "MemoriaAtiva",
-        importance: Notifications.AndroidImportance.MAX,
-        sound: "default",
-        vibrationPattern: [0, 500, 500, 500],
-        lightColor: "#FF231F7C",
-    });
-}
-
+// Configurações de Notificação (mantidas)
 async function registerForLocalNotifications() {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -208,17 +136,9 @@ async function registerForLocalNotifications() {
     return true;
 }
 
-// ========================================================
-// COMPONENTE PRINCIPAL (AlarmScreen)
-// ========================================================
-
+// Componente Principal Atualizado
 export default function AlarmScreen() {
-    // ⚠️ CHAMA O HOOK BLE AGORA DEFINIDO INTERNAMENTE
-    const { 
-        sendCommand, 
-        isConnected: isBleConnected 
-    } = useBleService(triggerBleNotification);
-
+    const { sendCommand, isConnected: isBleConnected } = useBleService();
     const [alarmes, setAlarmes] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [titulo, setTitulo] = useState("");
@@ -230,27 +150,34 @@ export default function AlarmScreen() {
     const [user, setUser] = useState(null);
     const [editingAlarme, setEditingAlarme] = useState(null);
     const [alarmeTocandoId, setAlarmeTocandoId] = useState(null);
+    const [fadeAnim] = useState(new Animated.Value(0));
 
     const diasSemana = [
-        { id: 1, nome: "Dom" },
-        { id: 2, nome: "Seg" },
-        { id: 3, nome: "Ter" },
-        { id: 4, nome: "Qua" },
-        { id: 5, nome: "Qui" },
-        { id: 6, nome: "Sex" },
-        { id: 7, nome: "Sáb" },
+        { id: 1, nome: "Dom", completo: "Domingo" },
+        { id: 2, nome: "Seg", completo: "Segunda" },
+        { id: 3, nome: "Ter", completo: "Terça" },
+        { id: 4, nome: "Qua", completo: "Quarta" },
+        { id: 5, nome: "Qui", completo: "Quinta" },
+        { id: 6, nome: "Sex", completo: "Sexta" },
+        { id: 7, nome: "Sáb", completo: "Sábado" },
     ];
 
     useEffect(() => {
         (async () => {
             const ok = await registerForLocalNotifications();
             if (ok) fetchUser();
+            
+            // Animação de entrada
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 800,
+                useNativeDriver: true,
+            }).start();
         })();
     }, []);
 
     useEffect(() => {
         const subscription = Notifications.addNotificationReceivedListener((notification) => {
-            // Supondo que o título ou corpo da notificação tenha o id ou título do alarme
             const titulo = notification.request.content.title;
             const alarme = alarmes.find(a => titulo.includes(a.titulo));
             if (alarme) setAlarmeTocandoId(alarme.id);
@@ -261,22 +188,6 @@ export default function AlarmScreen() {
         });
         return () => subscription.remove();
     }, [alarmes, isBleConnected, sendCommand]);
-
-    useEffect(() => {
-        const subscription = Notifications.addNotificationReceivedListener((notification) => {
-            // Só envie se for uma notificação de alarme
-            if (
-                notification.request.content.title?.includes("Alarme") ||
-                notification.request.content.title?.includes("⏰")
-            ) {
-                if (isBleConnected) {
-                    sendCommand("ON");
-                    console.log("Comando BLE enviado automaticamente: ON");
-                }
-            }
-        });
-        return () => subscription.remove();
-    }, [isBleConnected, sendCommand]);
 
     async function fetchUser() {
         const { data, error } = await supabase.auth.getUser();
@@ -334,7 +245,6 @@ export default function AlarmScreen() {
 
     async function salvarAlarme() {
         if (!user) return;
-
         let alarmeId;
 
         try {
@@ -344,36 +254,27 @@ export default function AlarmScreen() {
                     .update({ titulo, horario, ativo })
                     .eq("id", editingAlarme.id);
                 if (error) throw error;
-
                 alarmeId = editingAlarme.id;
-
                 await supabase.from("alarme_dias").delete().eq("alarme_id", alarmeId);
-                const inserts = diasSelecionados.map((diaId) => ({
-                    alarme_id: alarmeId,
-                    dia_semana_id: diaId,
-                }));
-                await supabase.from("alarme_dias").insert(inserts);
             } else {
                 const { data, error } = await supabase
                     .from("alarmes")
                     .insert([{ titulo, horario, ativo, user_id: user.id }])
                     .select("id");
                 if (error) throw error;
-
                 alarmeId = data[0]?.id;
+            }
 
-                if (alarmeId && diasSelecionados.length > 0) {
-                    const inserts = diasSelecionados.map((diaId) => ({
-                        alarme_id: alarmeId,
-                        dia_semana_id: diaId,
-                    }));
-                    await supabase.from("alarme_dias").insert(inserts);
-                }
+            if (alarmeId && diasSelecionados.length > 0) {
+                const inserts = diasSelecionados.map((diaId) => ({
+                    alarme_id: alarmeId,
+                    dia_semana_id: diaId,
+                }));
+                await supabase.from("alarme_dias").insert(inserts);
             }
 
             setModalVisible(false);
             fetchAlarmes();
-
             await agendarAlarme({
                 id: alarmeId,
                 titulo,
@@ -413,21 +314,16 @@ export default function AlarmScreen() {
         if (error) console.error("Erro ao atualizar ativo:", error);
 
         fetchAlarmes();
-
         if (novoAtivo) await agendarAlarme(alarme);
         
-        // ENVIO DE COMANDO BLE AO ATIVAR/DESATIVAR
         if (isBleConnected) {
             const comando = novoAtivo ? "ON" : "OFF";
             await sendCommand(comando);
-            console.log(`Comando BLE enviado ao toggle: ${comando}`);
         }
     }
 
     async function agendarAlarme(alarme) {
         try {
-            console.log("🔔 Agendando alarme:", alarme);
-
             if (!alarme.ativo) return;
 
             const [hora, minuto] = alarme.horario.split(":").map(Number);
@@ -451,7 +347,7 @@ export default function AlarmScreen() {
                 proximaData.setHours(hora, minuto, 0, 0);
                 if (proximaData <= agora) proximaData.setDate(proximaData.getDate() + 1);
 
-                const id = await Notifications.scheduleNotificationAsync({
+                await Notifications.scheduleNotificationAsync({
                     content: {
                         title: `⏰ ${alarme.titulo || "Alarme"}`,
                         body: mensagem,
@@ -459,12 +355,10 @@ export default function AlarmScreen() {
                     },
                     trigger: { type: "date", date: proximaData },
                 });
-
-                console.log("✅ Alarme único agendado:", id, proximaData.toISOString());
             }
 
             for (const diaId of dias) {
-                const id = await Notifications.scheduleNotificationAsync({
+                await Notifications.scheduleNotificationAsync({
                     content: {
                         title: `⏰ ${alarme.titulo || "Alarme"}`,
                         body: mensagem,
@@ -477,162 +371,267 @@ export default function AlarmScreen() {
                         repeats: true,
                     },
                 });
-                console.log(`🔁 Alarme recorrente (${diaId}) agendado:`, id);
             }
             
-            // ENVIO DE COMANDO BLE APÓS AGENDAMENTO
             if (isBleConnected) {
-                await sendCommand("ALARM_SCHEDULED"); 
-                console.log("Comando BLE enviado: ALARM_SCHEDULED");
+                await sendCommand("ALARM_SCHEDULED");
             }
-            
-            console.log("✅ Alarmes recorrentes agendados:", dias);
         } catch (err) {
             console.error("🚨 Erro em agendarAlarme:", err);
         }
     }
 
+    const onChangeTime = (event, selectedDate) => {
+        if (event.type === "dismissed") return setShowTimePicker(false);
+        const currentDate = selectedDate || date;
+        setShowTimePicker(false);
+        setDate(currentDate);
+        const hours = String(currentDate.getHours()).padStart(2, "0");
+        const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+        setHorario(`${hours}:${minutes}`);
+    };
 
-        const onChangeTime = (event, selectedDate) => {
-            if (event.type === "dismissed") return setShowTimePicker(false);
-            const currentDate = selectedDate || date;
-            setShowTimePicker(false);
-            setDate(currentDate);
-            const hours = String(currentDate.getHours()).padStart(2, "0");
-            const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-            setHorario(`${hours}:${minutes}`);
-        };
+    const getDiasTexto = (dias) => {
+        if (dias.length === 0) return "Uma vez";
+        if (dias.length === 7) return "Todos os dias";
+        
+        const diasSelecionados = diasSemana.filter(d => dias.includes(d.id));
+        return diasSelecionados.map(d => d.nome).join(", ");
+    };
 
-        return (
-            <View style={styles.container}>
-                <Text style={{
-                    fontSize: 22,
-                    fontFamily: "Poppins_700Bold",
-                    color: "#17285D",
-                    marginBottom: 20,
-                    textAlign: "center",}}>
-                        Programe seus alarmes
-                </Text> 
-
-                <View style={{ alignItems: 'center', marginBottom: 10, flexDirection: 'row', justifyContent: 'center' }}>
-                    <Image source={bracelete} style={{ width: 140, height: 110, resizeMode: 'contain'}} />
-                    <Image source={seta} style={{ width: 55, height: 100, resizeMode: 'contain' }} />
-                    <Image source={blue} style={{ width: 140, height: 100, resizeMode: 'contain'}} />
-                </View>
-                {/* Mostra status de conexão */}
-                <View style={{ padding: 5, backgroundColor: isBleConnected ? '#d1e7dd' : '#f8d7da', borderBottomWidth: 1, borderColor: '#ccc' }}>
-                    <Text style={{ fontSize: 14, textAlign: 'center', fontWeight: 'bold' }}>
-                        Status BLE: {isBleConnected ? 'Conectado' : 'Procurando/Desconectado'}
+    return (
+        <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+            {/* Header Moderno */}
+            <View style={styles.header}>
+                <View style={styles.headerContent}>
+                    <Text style={styles.headerTitle}>Alarmes Inteligentes</Text>
+                    <Text style={styles.headerSubtitle}>
+                        Programe seus treinos de memória
                     </Text>
                 </View>
+                
+                {/* Status de Conexão */}
+                <View style={styles.connectionStatus}>
+                    <View style={[
+                        styles.connectionDot, 
+                        { backgroundColor: isBleConnected ? '#4CAF50' : '#F44336' }
+                    ]} />
+                    <Text style={styles.connectionText}>
+                        {isBleConnected ? 'Dispositivo Conectado' : 'Procurando Dispositivo...'}
+                    </Text>
+                </View>
+            </View>
 
-                <ScrollView style={styles.list}>
-                    {alarmes.map((a) => (
-                        <TouchableOpacity key={a.id} onPress={() => handleOpenModal(a)}>
-                            <View style={styles.alarmCard}>
+            {/* Visual do Dispositivo */}
+            <View style={styles.deviceVisual}>
+                <View style={styles.deviceImages}>
+                    <Image source={require('../../../assets/bracogpt.png')} style={styles.deviceImage} />
+                    <Image source={require('../../../assets/seta.png')} style={styles.arrowImage} />
+                    <Image source={require('../../../assets/blueazul.png')} style={styles.deviceImage} />
+                </View>
+                <Text style={styles.deviceDescription}>
+                    Seus alarmes sincronizam com o dispositivo wearable
+                </Text>
+            </View>
+
+            {/* Lista de Alarmes */}
+            <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
+                {alarmes.length === 0 ? (
+                    <View style={styles.emptyState}>
+                        <Ionicons name="alarm-outline" size={60} color="#ccc" />
+                        <Text style={styles.emptyTitle}>Nenhum alarme programado</Text>
+                        <Text style={styles.emptyText}>
+                            Toque no + para criar seu primeiro alarme
+                        </Text>
+                    </View>
+                ) : (
+                    alarmes.map((alarme) => (
+                        <TouchableOpacity 
+                            key={alarme.id} 
+                            onPress={() => handleOpenModal(alarme)}
+                            activeOpacity={0.9}
+                        >
+                            <View style={[
+                                styles.alarmCard,
+                                !alarme.ativo && styles.alarmCardInativo,
+                                alarmeTocandoId === alarme.id && styles.alarmCardAtivo
+                            ]}>
+                                {/* Header do Card */}
                                 <View style={styles.alarmHeader}>
-                                    <Text style={styles.alarmTime}>{a.horario}</Text>
-                                    {alarmeTocandoId === a.id ? (
+                                    <View style={styles.alarmTimeContainer}>
+                                        <Text style={[
+                                            styles.alarmTime,
+                                            !alarme.ativo && styles.textInativo
+                                        ]}>
+                                            {alarme.horario}
+                                        </Text>
+                                        <Text style={styles.alarmRepetition}>
+                                            {getDiasTexto(alarme.dias)}
+                                        </Text>
+                                    </View>
+                                    
+                                    {alarmeTocandoId === alarme.id ? (
                                         <TouchableOpacity
-                                            style={{ marginLeft: 10, backgroundColor: "#F87171", padding: 8, borderRadius: 8 }}
+                                            style={styles.stopButton}
                                             onPress={async () => {
                                                 if (isBleConnected) await sendCommand("OFF");
-                                                await toggleAtivo(a); // desativa o alarme
+                                                await toggleAtivo(alarme);
                                                 setAlarmeTocandoId(null);
                                             }}
                                         >
-                                            <Text style={{ color: "#FFF", fontWeight: "bold" }}>Desligar</Text>
+                                            <Ionicons name="stop-circle" size={32} color="#F44336" />
                                         </TouchableOpacity>
                                     ) : (
                                         <Switch 
-                                            value={a.ativo} 
-                                            onValueChange={() => toggleAtivo(a)} 
+                                            value={alarme.ativo} 
+                                            onValueChange={() => toggleAtivo(alarme)}
+                                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                            thumbColor={alarme.ativo ? "#17285D" : "#f4f3f4"}
                                         />
                                     )}
                                 </View>
-                                <Text style={styles.alarmTitle}>{a.titulo}</Text>
+                                
+                                {/* Título e Dias */}
+                                <Text style={[
+                                    styles.alarmTitle,
+                                    !alarme.ativo && styles.textInativo
+                                ]}>
+                                    {alarme.titulo}
+                                </Text>
+                                
+                                {/* Dias da Semana */}
                                 <View style={styles.diasContainer}>
-                                    {diasSemana.map((d) => (
-                                        <Text
-                                            key={d.id}
-                                            style={[styles.dia, a.dias.includes(d.id) && styles.diaAtivo]}
+                                    {diasSemana.map((dia) => (
+                                        <View
+                                            key={dia.id}
+                                            style={[
+                                                styles.diaPill,
+                                                alarme.dias.includes(dia.id) 
+                                                    ? styles.diaPillAtivo 
+                                                    : styles.diaPillInativo,
+                                                !alarme.ativo && styles.diaPillDisabled
+                                            ]}
                                         >
-                                            {d.nome}
-                                        </Text>
+                                            <Text style={[
+                                                styles.diaText,
+                                                alarme.dias.includes(dia.id) 
+                                                    ? styles.diaTextAtivo 
+                                                    : styles.diaTextInativo
+                                            ]}>
+                                                {dia.nome}
+                                            </Text>
+                                        </View>
                                     ))}
                                 </View>
                             </View>
                         </TouchableOpacity>
-                    ))}
-                </ScrollView>
+                    ))
+                )}
+            </ScrollView>
 
-                <TouchableOpacity style={styles.fab} onPress={() => handleOpenModal()}>
-                    <Ionicons name="add" size={30} color="#FFF" />
-                </TouchableOpacity>
+            {/* FAB Moderno */}
+            <TouchableOpacity 
+                style={styles.fab} 
+                onPress={() => handleOpenModal()}
+                activeOpacity={0.8}
+            >
+                <Ionicons name="add" size={28} color="#FFF" />
+            </TouchableOpacity>
 
-                <Modal visible={modalVisible} animationType="slide" transparent>
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContent}>
+            {/* Modal Modernizado */}
+            <Modal visible={modalVisible} animationType="slide" transparent>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
                             <Text style={styles.modalTitle}>
                                 {editingAlarme ? "Editar Alarme" : "Novo Alarme"}
                             </Text>
+                            <TouchableOpacity 
+                                style={styles.modalClose}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Ionicons name="close" size={24} color="#666" />
+                            </TouchableOpacity>
+                        </View>
 
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.inputLabel}>Título do Alarme</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Título"
+                                placeholder="Ex: Treino Matinal"
+                                placeholderTextColor="#999"
                                 value={titulo}
                                 onChangeText={setTitulo}
                             />
+                        </View>
 
-                            <TouchableOpacity style={styles.input} onPress={() => setShowTimePicker(true)}>
-                                <Text>{horario}</Text>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.inputLabel}>Horário</Text>
+                            <TouchableOpacity 
+                                style={styles.timePickerButton} 
+                                onPress={() => setShowTimePicker(true)}
+                            >
+                                <Ionicons name="time-outline" size={20} color="#666" />
+                                <Text style={styles.timePickerText}>{horario}</Text>
                             </TouchableOpacity>
+                        </View>
 
-                            {showTimePicker && (
-                                <DateTimePicker
-                                    value={date}
-                                    mode="time"
-                                    is24Hour
-                                    display="clock"
-                                    onChange={onChangeTime}
-                                />
-                            )}
+                        {showTimePicker && (
+                            <DateTimePicker
+                                value={date}
+                                mode="time"
+                                is24Hour
+                                display="clock"
+                                onChange={onChangeTime}
+                            />
+                        )}
 
-                            <Text style={styles.sectionTitle}>Dias da Semana</Text>
-                            <View style={styles.diasContainer}>
-                                {diasSemana.map((d) => (
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.inputLabel}>Repetir</Text>
+                            <View style={styles.diasContainerModal}>
+                                {diasSemana.map((dia) => (
                                     <TouchableOpacity
-                                        key={d.id}
+                                        key={dia.id}
                                         style={[
                                             styles.diaSelecionavel,
-                                            diasSelecionados.includes(d.id) && styles.diaSelecionado,
+                                            diasSelecionados.includes(dia.id) && styles.diaSelecionado,
                                         ]}
-                                        onPress={() => toggleDia(d.id)}
+                                        onPress={() => toggleDia(dia.id)}
                                     >
-                                        <Text style={styles.diaTexto}>{d.nome}</Text>
+                                        <Text style={[
+                                            styles.diaTexto,
+                                            diasSelecionados.includes(dia.id) && styles.diaTextoSelecionado
+                                        ]}>
+                                            {dia.nome}
+                                        </Text>
                                     </TouchableOpacity>
                                 ))}
                             </View>
+                        </View>
 
-                            <TouchableOpacity style={styles.saveButton} onPress={salvarAlarme}>
-                                <Text style={styles.saveButtonText}>Salvar</Text>
-                            </TouchableOpacity>
-
+                        <View style={styles.modalActions}>
                             {editingAlarme && (
                                 <TouchableOpacity
-                                    style={[styles.exludeButton]}
+                                    style={[styles.modalButton, styles.deleteButton]}
                                     onPress={excluirAlarme}
                                 >
-                                    <Text style={[styles.excludeButtonText, { color: "#FFF" }]}>Excluir</Text>
+                                    <Ionicons name="trash-outline" size={20} color="#FFF" />
+                                    <Text style={styles.deleteButtonText}>Excluir</Text>
                                 </TouchableOpacity>
                             )}
-
-                            <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
-                                <Text style={styles.cancelButtonText}>Cancelar</Text>
+                            <TouchableOpacity 
+                                style={[styles.modalButton, styles.saveButton]} 
+                                onPress={salvarAlarme}
+                            >
+                                <Ionicons name="save-outline" size={20} color="#FFF" />
+                                <Text style={styles.saveButtonText}>
+                                    {editingAlarme ? "Atualizar" : "Criar Alarme"}
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                </Modal>
-            </View>
-        );
-    }
+                </View>
+            </Modal>
+        </Animated.View>
+    );
+}

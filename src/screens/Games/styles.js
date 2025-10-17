@@ -135,7 +135,7 @@ export const styles = StyleSheet.create({
     },
     gameCategory: {
         fontSize: 14,
-        fontFamily: "Poppins_500Medium",
+        fontFamily: "Poppins_700Bold",
         color: "rgba(255,255,255,0.9)",
         marginBottom: 8,
         textShadowColor: "rgba(0,0,0,0.5)",

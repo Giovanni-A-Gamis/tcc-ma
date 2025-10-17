@@ -1,161 +1,332 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F7F7F7",
-        padding: 16,
+        backgroundColor: "#f8fafc",
+    },
+    header: {
+        backgroundColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        paddingHorizontal: 20,
+        paddingTop: 50,
+        paddingBottom: 20,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        marginBottom: 20,
+    },
+    headerContent: {
+        alignItems: "center",
+        marginBottom: 15,
+    },
+    headerTitle: {
+        fontSize: 28,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        textAlign: "center",
+        marginBottom: 8,
+        textShadowColor: "rgba(0,0,0,0.3)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
+    headerSubtitle: {
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#17285D",
+        textAlign: "center",
+    },
+    connectionStatus: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#17285D",
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        alignSelf: 'center',
+        elevation: 3,
+    },
+    connectionDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        marginRight: 8,
+    },
+    connectionText: {
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
+        color: "#fff",
+    },
+    deviceVisual: {
+        alignItems: "center",
+        marginBottom: 20,
+        paddingHorizontal: 20,
+    },
+    deviceImages: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: -15,
+        marginBottom: 10,
+    },
+    deviceImage: {
+        width: 120,
+        height: 100,
+        resizeMode: 'contain',
+    },
+    arrowImage: {
+        width: 50,
+        height: 80,
+        resizeMode: 'contain',
+        marginHorizontal: 10,
+    },
+    deviceDescription: {
+        fontSize: 14,
+        fontFamily: "Poppins_400Regular",
+        color: "#666",
+        textAlign: "center",
     },
     list: {
         flex: 1,
+        paddingHorizontal: 16,
+    },
+    emptyState: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 60,
+    },
+    emptyTitle: {
+        fontSize: 18,
+        fontFamily: "Poppins_700Bold",
+        color: "#666",
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    emptyText: {
+        fontSize: 14,
+        fontFamily: "Poppins_400Regular",
+        color: "#999",
+        textAlign: "center",
+        paddingHorizontal: 40,
     },
     alarmCard: {
         backgroundColor: "#FFF",
-        padding: 16,
-        borderRadius: 12,
-        marginBottom: 12,
-        elevation: 3,
+        padding: 20,
+        borderRadius: 20,
+        marginBottom: 16,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
+        borderLeftWidth: 4,
+        borderLeftColor: "#17285D",
     },
-    // NOVO: Estilo para alarmes inativos (desligados)
     alarmCardInativo: {
-        backgroundColor: '#F5F5F5', // Cor de fundo mais clara
-        opacity: 0.8, // Opacidade reduzida
+        backgroundColor: '#F5F5F5',
+        opacity: 0.8,
+        borderLeftColor: "#CCC",
+    },
+    alarmCardAtivo: {
+        borderLeftColor: "#4CAF50",
+        backgroundColor: '#F0F9FF',
     },
     alarmHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: "flex-start",
+        marginBottom: 12,
+    },
+    alarmTimeContainer: {
+        flex: 1,
     },
     alarmTime: {
-        fontSize: 28,
-        marginBottom: -6,
-        color: "#333",
+        fontSize: 32,
         fontFamily: 'Poppins_700Bold',
+        color: "#17285D",
+        marginBottom: 4,
+    },
+    alarmRepetition: {
+        fontSize: 14,
+        fontFamily: 'Poppins_400Regular',
+        color: "#666",
     },
     alarmTitle: {
-        fontSize: 16,
-        marginTop: 4,
+        fontSize: 18,
+        fontFamily: 'Poppins_700Bold',
         color: "#444",
-        fontFamily: 'Poppins_400Regular',
+        marginBottom: 12,
     },
-    // NOVO: Estilo de texto para quando o alarme está inativo
     textInativo: {
-        color: '#A0A0A0', // Texto acinzentado
+        color: '#A0A0A0',
+    },
+    stopButton: {
+        padding: 4,
     },
     diasContainer: {
         flexDirection: "row",
         flexWrap: "wrap",
-        marginTop: 8,
     },
-    dia: {
+    diaPill: {
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 16,
         marginRight: 8,
-        fontSize: 14,
-        color: "#AAA",
-        fontFamily: 'Poppins_400Regular',
+        marginBottom: 8,
     },
-    diaAtivo: {
-        color: "#000",
+    diaPillAtivo: {
+        backgroundColor: "#17285D",
+    },
+    diaPillInativo: {
+        backgroundColor: "#F0F0F0",
+    },
+    diaPillDisabled: {
+        opacity: 0.5,
+    },
+    diaText: {
+        fontSize: 12,
         fontFamily: 'Poppins_700Bold',
     },
-    // NOVO: Estilo para o dia da semana quando o alarme está inativo
-    diaInativo: {
-        opacity: 0.4,
+    diaTextAtivo: {
+        color: "#FFF",
     },
-
-    // FAB
+    diaTextInativo: {
+        color: "#666",
+    },
     fab: {
         position: "absolute",
         bottom: 20,
         right: 20,
-        backgroundColor: "#8ec0c7",
+        backgroundColor: "#17285D",
         width: 60,
         height: 60,
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
         elevation: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
     },
-
-    // Modal
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
         justifyContent: "center",
         alignItems: "center",
+        padding: 20,
     },
     modalContent: {
         backgroundColor: "#FFF",
-        padding: 20,
-        borderRadius: 12,
-        width: "85%",
+        padding: 24,
+        borderRadius: 20,
+        width: "90%",
+        maxWidth: 400,
+    },
+    modalHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 24,
     },
     modalTitle: {
-        fontSize: 20,
+        fontSize: 22,
         fontFamily: 'Poppins_700Bold',
-        marginBottom: 12,
-        textAlign: "center",
+        color: "#17285D",
+        flex: 1,
+    },
+    modalClose: {
+        padding: 4,
+    },
+    inputGroup: {
+        marginBottom: 20,
+    },
+    inputLabel: {
+        fontSize: 16,
+        fontFamily: 'Poppins_700Bold',
+        color: "#333",
+        marginBottom: 8,
     },
     input: {
         borderWidth: 1,
         borderColor: "#DDD",
-        borderRadius: 8,
-        padding: 10,
-        marginBottom: 10,
+        borderRadius: 12,
+        padding: 16,
         fontFamily: 'Poppins_400Regular',
-    },
-    sectionTitle: {
         fontSize: 16,
-        fontWeight: "600",
-        marginTop: 10,
-        marginBottom: 6,
+        backgroundColor: "#f8f9fa",
+    },
+    timePickerButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: "#DDD",
+        borderRadius: 12,
+        padding: 16,
+        backgroundColor: "#f8f9fa",
+    },
+    timePickerText: {
+        fontSize: 16,
+        fontFamily: 'Poppins_400Regular',
+        marginLeft: 8,
+        color: "#333",
+    },
+    diasContainerModal: {
+        flexDirection: "row",
+        flexWrap: "wrap",
     },
     diaSelecionavel: {
         borderWidth: 1,
         borderColor: "#CCC",
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderRadius: 6,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
         margin: 4,
+        backgroundColor: "#F5F5F5",
     },
     diaSelecionado: {
-        backgroundColor: "#3B82F6",
-        borderColor: "#3B82F6",
+        backgroundColor: "#17285D",
+        borderColor: "#17285D",
     },
     diaTexto: {
         color: "#333",
         fontFamily: 'Poppins_400Regular',
+        fontSize: 14,
+    },
+    diaTextoSelecionado: {
+        color: "#FFF",
+    },
+    modalActions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    modalButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        flex: 1,
+        marginHorizontal: 5,
     },
     saveButton: {
-        backgroundColor: "#3B82F6",
-        padding: 12,
-        borderRadius: 8,
-        marginTop: 12,
-        alignItems: "center",
+        backgroundColor: "#17285D",
+    },
+    deleteButton: {
+        backgroundColor: "#EF4444",
     },
     saveButtonText: {
         color: "#FFF",
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'Poppins_700Bold',
+        marginLeft: 8,
     },
-    cancelButton: {
-        marginTop: 10,
-        alignItems: "center",
-    },
-    cancelButtonText: {
-        color: "#555",
-        fontFamily: 'Poppins_400Regular',
-    },
-    exludeButton: {
-        backgroundColor: "#EF4444",
-        padding: 8,
-        borderRadius: 8,
-        marginTop: 8,
-        alignItems: "center",
-    },
-    exludeButtonText: {
+    deleteButtonText: {
         color: "#FFF",
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'Poppins_700Bold',
+        marginLeft: 8,
     },
-    
 });

@@ -1,154 +1,326 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F5F5F5",
-        padding: 16,
+        backgroundColor: "#f8fafc",
     },
-
     header: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 16,
-        textAlign: "center",
-        color: "#333",
+        backgroundColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        paddingHorizontal: 20,
+        paddingTop: 50,
+        paddingBottom: 30,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        marginBottom: 20,
     },
-
+    headerContent: {
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    headerTitle: {
+        fontSize: 28,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        textAlign: "center",
+        marginBottom: 8,
+        textShadowColor: "rgba(0,0,0,0.3)",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
+    headerSubtitle: {
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#17285D",
+        textAlign: "center",
+    },
+    statsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginTop: 10,
+    },
+    statItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#17285D",
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        elevation: 3,
+        marginBottom: -15,
+    },
+    statText: {
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
+        color: "#fff",
+        marginLeft: 6,
+    },
+    todayHighlightCard: {
+        backgroundColor: "#FFF",
+        marginHorizontal: 20,
+        marginBottom: 20,
+        padding: 20,
+        borderRadius: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.1,
+        shadowRadius: 16,
+        elevation: 8,
+        borderLeftWidth: 4,
+        borderLeftColor: "#4CAF50",
+    },
+    todayCardHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 15,
+    },
+    todayBadge: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#E8F5E8",
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 12,
+    },
+    todayBadgeText: {
+        fontSize: 12,
+        fontFamily: "Poppins_700Bold",
+        color: "#4CAF50",
+        marginLeft: 4,
+    },
+    editTodayButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: "#F0F8FF",
+        alignItems: "center",
+        justifyContent: "center",
+        borderWidth: 1,
+        borderColor: "#E1E5EF",
+    },
+    todayPreview: {
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#444",
+        lineHeight: 24,
+        marginBottom: 15,
+    },
+    todayFooter: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    moodContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    moodEmoji: {
+        fontSize: 20,
+        marginRight: 8,
+    },
+    moodText: {
+        fontSize: 12,
+        fontFamily: "Poppins_400Regular",
+        color: "#666",
+    },
+    todayTime: {
+        fontSize: 12,
+        fontFamily: "Poppins_400Regular",
+        color: "#999",
+    },
     diaryList: {
         flex: 1,
-        marginBottom: 60, 
+        paddingHorizontal: 16,
     },
-
-    diaryItem: {
+    emptyContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    emptyState: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 60,
+    },
+    emptyTitle: {
+        fontSize: 18,
+        fontFamily: "Poppins_700Bold",
+        color: "#666",
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    emptyText: {
+        fontSize: 14,
+        fontFamily: "Poppins_400Regular",
+        color: "#999",
+        textAlign: "center",
+        paddingHorizontal: 40,
+        lineHeight: 20,
+    },
+    diaryCard: {
         backgroundColor: "#FFF",
-        padding: 12,
-        marginBottom: 10,
-        borderRadius: 8,
-        elevation: 3,
+        padding: 20,
+        borderRadius: 16,
+        marginBottom: 16,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
     },
-
+    diaryCardHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 12,
+    },
+    dateContainer: {
+        flex: 1,
+    },
     diaryDate: {
-        fontSize: 19,
-        color: "#000",
-        marginBottom: 6,
-        fontFamily: 'Poppins_700Bold'
-    },
-
-    diaryContent: {
         fontSize: 16,
-        color: "#333",
-        fontFamily: 'Poppins_400Regular'
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        marginBottom: 4,
     },
-
+    moodIndicator: {
+        width: 4,
+        height: 4,
+        borderRadius: 2,
+    },
+    moodEmojiCard: {
+        fontSize: 20,
+    },
+    diaryContent: {
+        fontSize: 14,
+        fontFamily: "Poppins_400Regular",
+        color: "#444",
+        lineHeight: 20,
+    },
+    readMore: {
+        fontSize: 12,
+        fontFamily: "Poppins_400Regular",
+        color: "#666",
+        marginTop: 8,
+        fontStyle: "italic",
+    },
     fab: {
         position: "absolute",
         bottom: 20,
         right: 20,
-        backgroundColor: "#8ec0c7",
+        backgroundColor: "#17285D",
         width: 60,
         height: 60,
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
         elevation: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
     },
-
-    fabText: {
-        fontSize: 30,
-        color: "#FFF",
-        fontWeight: "bold",
-    },
-
-    // Modal
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
         justifyContent: "center",
         alignItems: "center",
+        padding: 20,
     },
-
     modalContent: {
         backgroundColor: "#FFF",
-        padding: 20,
-        borderRadius: 10,
+        padding: 24,
+        borderRadius: 20,
         width: "90%",
-        elevation: 5,
-        
+        maxWidth: 400,
+        maxHeight: "80%",
     },
-
-    modalTitle: {
-        fontSize: 20,
+    modalHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
         marginBottom: 12,
-        color: "#333",
-        textAlign: "center",
-        fontFamily: 'Poppins_700Bold'
     },
-
+    modalTitle: {
+        fontSize: 22,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        flex: 1,
+        marginRight: 10,
+    },
+    modalSubtitle: {
+        fontSize: 14,
+        fontFamily: "Poppins_400Regular",
+        color: "#666",
+        marginBottom: 20,
+        lineHeight: 20,
+    },
+    modalClose: {
+        padding: 4,
+    },
     textArea: {
-        height: 150,
-        borderColor: "#CCC",
+        height: 200,
         borderWidth: 1,
-        borderRadius: 8,
-        padding: 10,
-        marginBottom: 15,
+        borderColor: "#E1E5EF",
+        borderRadius: 12,
+        padding: 16,
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#333",
+        backgroundColor: "#f8f9fa",
         textAlignVertical: "top",
-        backgroundColor: "#FAFAFA",
-        fontFamily: 'Poppins_400Regular'
     },
-
+    charCount: {
+        alignItems: "flex-end",
+        marginTop: 8,
+    },
+    charCountText: {
+        fontSize: 12,
+        fontFamily: "Poppins_400Regular",
+        color: "#999",
+    },
+    modalActions: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20,
+    },
     saveButton: {
-        backgroundColor: "#8ec0c7",
-        padding: 12,
-        borderRadius: 8,
+        flexDirection: "row",
         alignItems: "center",
-        marginBottom: 10,
+        backgroundColor: "#17285D",
+        paddingHorizontal: 24,
+        paddingVertical: 12,
+        borderRadius: 12,
+        flex: 1,
+        marginLeft: 10,
+        justifyContent: "center",
     },
-
+    saveButtonDisabled: {
+        backgroundColor: "#CCC",
+    },
     saveButtonText: {
         color: "#FFF",
-        fontSize: 16,
-        fontFamily: 'Poppins_700Bold'
+        fontSize: 13,
+        fontFamily: "Poppins_700Bold",
+        marginLeft: 8,
     },
-
     cancelButton: {
-        backgroundColor: "#E0E0E0",
-        padding: 12,
-        borderRadius: 8,
+        paddingHorizontal: 24,
+        paddingVertical: 12,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: "#E1E5EF",
+        backgroundColor: "#FFF",
+        flex: 1,
+        marginRight: 10,
         alignItems: "center",
     },
-
     cancelButtonText: {
-        color: "#333",
-        fontSize: 14,
-        fontFamily: 'Poppins_700Bold'
-    },
-    todayDiaryItem: {
-        backgroundColor: '#f0f8ff',
-        borderLeftWidth: 4,
-        borderLeftColor: '#8ec0c7',
-        marginBottom: 12,
-    },
-    diaryHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    editButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#e3f2fd',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#8ec0c7',
-    },
-    editButtonText: {
-        marginLeft: 4,
-        fontSize: 12,
-        fontFamily: 'Poppins_700Bold',
-        color: '#17285D',
+        color: "#666",
+        fontSize: 13,
+        fontFamily: "Poppins_700Bold",
     },
 });
