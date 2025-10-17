@@ -43,6 +43,8 @@ export default function GameIntro({ navigation, route }) {
                             navigation.navigate("PalavrasFugidias");
                         } else if (jogo.nome === "Efeito Stroop") {
                             navigation.navigate("Stroop");
+                        } else if (jogo.nome === "Quiz do Diário") {
+                            navigation.navigate("DiaryQuiz");
                         }
                         else {
                             navigation.navigate("GamePlaceholder", { nome: jogo.nome });
