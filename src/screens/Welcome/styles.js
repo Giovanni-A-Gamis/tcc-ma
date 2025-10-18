@@ -1,24 +1,34 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingAnimation: {
+        width: 400,
+        height: 400,
+    },
     background: {
         flex: 1,
         justifyContent: 'flex-end',
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.4)', // Escurece a imagem
+        backgroundColor: 'rgba(0,0,0,0.4)',
     },
     content: {
         alignItems: 'center',
         padding: 20,
         backgroundColor: '#f0f0f0',
-        borderRadius: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
-    logo: {
+    logoAnimation: {
         width: 325,
-        height: 100,
-        resizeMode: 'contain',
+        height: 85,
         marginBottom: 15,
     },
     buttonPrimary: {
@@ -28,6 +38,8 @@ export const styles = StyleSheet.create({
         borderRadius: 25,
         marginBottom: 5,
         elevation: 2,
+        width: '100%',
+        alignItems: 'center',
     },
     buttonTextPrimary: {
         fontFamily: 'Poppins_700Bold',
