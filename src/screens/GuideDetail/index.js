@@ -130,7 +130,7 @@ export default function GuideDetail({ navigation, route }) {
                         </Text>
                         <TouchableOpacity 
                             style={styles.ctaButton}
-                            onPress={() => navigation.navigate("Guide")}
+                            onPress={() => navigation.goBack()}
                         >
                             <Text style={styles.ctaButtonText}>Ver Mais Guias</Text>
                         </TouchableOpacity>
