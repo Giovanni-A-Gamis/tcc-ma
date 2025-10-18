@@ -56,7 +56,7 @@ export default function GuideDetail({ navigation, route }) {
                 )}
                 scrollEventThrottle={16}
             >
-                {/* Hero Section */}
+                {/* Hero Section - Altura Reduzida */}
                 <ImageBackground 
                     source={{ uri: guia.img_url }} 
                     style={styles.heroImage}
@@ -71,7 +71,7 @@ export default function GuideDetail({ navigation, route }) {
                         <Ionicons name="arrow-back" size={24} color="#fff" />
                     </TouchableOpacity>
 
-                    {/* Conteúdo do Hero */}
+                    {/* Conteúdo do Hero - Mais Compacto */}
                     <View style={styles.heroContent}>
                         <View style={[
                             styles.categoryBadge,
@@ -82,25 +82,27 @@ export default function GuideDetail({ navigation, route }) {
                         
                         <Text style={styles.title}>{guia.titulo}</Text>
                         
-                        <View style={styles.authorContainer}>
-                            <Ionicons name="person-circle" size={20} color="rgba(255,255,255,0.9)" />
-                            <Text style={styles.author}>Por {guia.autor}</Text>
-                        </View>
-
-                        <View style={styles.metaInfo}>
-                            <View style={styles.metaItem}>
-                                <Ionicons name="time" size={14} color="rgba(255,255,255,0.8)" />
-                                <Text style={styles.metaText}>5 min de leitura</Text>
+                        <View style={styles.metaContainer}>
+                            <View style={styles.authorContainer}>
+                                <Ionicons name="person-circle" size={16} color="rgba(255,255,255,0.9)" />
+                                <Text style={styles.author}>Por {guia.autor}</Text>
                             </View>
-                            <View style={styles.metaItem}>
-                                <Ionicons name="eye" size={14} color="rgba(255,255,255,0.8)" />
-                                <Text style={styles.metaText}>Conhecimento</Text>
+
+                            <View style={styles.metaInfo}>
+                                <View style={styles.metaItem}>
+                                    <Ionicons name="time" size={12} color="rgba(255,255,255,0.8)" />
+                                    <Text style={styles.metaText}>5 min</Text>
+                                </View>
+                                <View style={styles.metaItem}>
+                                    <Ionicons name="eye" size={12} color="rgba(255,255,255,0.8)" />
+                                    <Text style={styles.metaText}>Conhecimento</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
                 </ImageBackground>
 
-                {/* Conteúdo do Guia */}
+                {/* Resto do conteúdo permanece igual */}
                 <View style={styles.content}>
                     <View style={styles.contentHeader}>
                         <Text style={styles.contentTitle}>Sobre este guia</Text>
@@ -111,7 +113,6 @@ export default function GuideDetail({ navigation, route }) {
                         {guia.conteudo}
                     </Text>
 
-                    {/* Dicas Section */}
                     <View style={styles.tipsSection}>
                         <View style={styles.tipsHeader}>
                             <Ionicons name="bulb" size={24} color="#FFD700" />
@@ -122,7 +123,6 @@ export default function GuideDetail({ navigation, route }) {
                         </Text>
                     </View>
 
-                    {/* Call to Action */}
                     <View style={styles.ctaSection}>
                         <Text style={styles.ctaTitle}>Gostou deste guia?</Text>
                         <Text style={styles.ctaText}>

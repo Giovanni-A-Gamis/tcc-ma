@@ -48,37 +48,38 @@ export const styles = StyleSheet.create({
     fixedPlaceholder: {
         width: 40,
     },
+    // HERO SECTION COM ALTURA REDUZIDA
     heroImage: {
         width: "100%",
-        height: 400,
-        justifyContent: "space-between",
+        height: 320, // Reduzido de 400 para 320
+        justifyContent: "flex-end", // Alinha o conteúdo na parte inferior
     },
     heroOverlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)",
+        backgroundColor: "rgba(0,0,0,0.4)",
     },
     backButton: {
         position: "absolute",
         top: 50,
         left: 20,
-        width: 44,
-        height: 44,
-        borderRadius: 22,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         backgroundColor: "rgba(0,0,0,0.5)",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 10,
     },
     heroContent: {
-        padding: 24,
-        paddingBottom: 30,
+        padding: 20,
+        paddingBottom: 25, // Reduzido o padding inferior
     },
     categoryBadge: {
         alignSelf: "flex-start",
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 12,
-        marginBottom: 16,
+        marginBottom: 12, // Reduzido
     },
     categoryText: {
         fontSize: 12,
@@ -87,25 +88,30 @@ export const styles = StyleSheet.create({
         textTransform: "uppercase",
     },
     title: {
-        fontSize: 32,
+        fontSize: 28, // Reduzido ligeiramente
         fontFamily: "Poppins_700Bold",
         color: "#fff",
-        lineHeight: 38,
-        marginBottom: 16,
+        lineHeight: 34, // Reduzido
+        marginBottom: 15, // Reduzido
         textShadowColor: "rgba(0,0,0,0.5)",
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 5,
     },
+    metaContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
     authorContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 12,
+        flex: 1,
     },
     author: {
-        fontSize: 16,
-        fontFamily: "Poppins_700Bold",
+        fontSize: 14,
+        fontFamily: "Poppins_600SemiBold",
         color: "rgba(255,255,255,0.9)",
-        marginLeft: 8,
+        marginLeft: 6,
     },
     metaInfo: {
         flexDirection: "row",
@@ -113,14 +119,15 @@ export const styles = StyleSheet.create({
     metaItem: {
         flexDirection: "row",
         alignItems: "center",
-        marginRight: 16,
+        marginLeft: 12, // Alterado de marginRight para marginLeft
     },
     metaText: {
-        fontSize: 14,
+        fontSize: 12,
         fontFamily: "Poppins_400Regular",
         color: "rgba(255,255,255,0.8)",
         marginLeft: 4,
     },
+    // O resto dos estilos permanece igual
     content: {
         padding: 24,
         backgroundColor: "#fff",
@@ -136,7 +143,7 @@ export const styles = StyleSheet.create({
     },
     divider: {
         height: 3,
-        backgroundColor: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
+        backgroundColor: "#667eea",
         borderRadius: 2,
         width: 60,
     },
