@@ -1,8 +1,11 @@
+// DiarioQuiz.js - Ajustado
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from "react-native";
 import { generateQuestionsFromDiary } from "../../../services/quizGenerator";
 import { getDiaries } from "../../../services/diaryService";
 import { supabase } from "../../../lib/supabase";
+
+const { width, height } = Dimensions.get("window");
 
 export default function DiarioQuiz({ navigation }) {
     const [user, setUser] = useState(null);
@@ -13,9 +16,8 @@ export default function DiarioQuiz({ navigation }) {
     const [finished, setFinished] = useState(false);
     const [loading, setLoading] = useState(true);
     const fadeAnim = useRef(new Animated.Value(0)).current;
-    const [feedbackColor, setFeedbackColor] = useState("#17285D");
+    const [feedbackColor, setFeedbackColor] = useState("#4A6FA5");
 
-    // Carrega o usuário e gera as perguntas com base no último diário
     useEffect(() => {
         loadUser();
     }, []);
@@ -29,144 +31,152 @@ export default function DiarioQuiz({ navigation }) {
 
     async function loadDiary(userId) {
         try {
-        const data = await getDiaries(userId);
-        if (!data || data.length === 0) {
+            const data = await getDiaries(userId);
+            if (!data || data.length === 0) {
+                setLoading(false);
+                return;
+            }
+            const latest = data[0].conteudo;
+            const q = generateQuestionsFromDiary(latest);
+            setQuestions(q);
             setLoading(false);
-            return;
-        }
-        const latest = data[0].conteudo;
-        const q = generateQuestionsFromDiary(latest);
-        setQuestions(q);
-        setLoading(false);
-        fadeIn();
+            fadeIn();
         } catch (err) {
-        console.error("Erro ao carregar diário:", err);
-        setLoading(false);
+            console.error("Erro ao carregar diário:", err);
+            setLoading(false);
         }
     }
 
-    // Animação suave de entrada de pergunta
     const fadeIn = () => {
         fadeAnim.setValue(0);
         Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
+            toValue: 1,
+            duration: 600,
+            useNativeDriver: true,
         }).start();
     };
 
-    // Escolha de resposta
     const handleSelect = (opt) => {
-        if (selected) return; // impede duplo clique
+        if (selected) return;
         const question = questions[current];
         setSelected(opt);
         const isCorrect = opt === question.respostaCorreta;
         setCorrect(isCorrect);
-        setFeedbackColor(isCorrect ? "#27ae60" : "#e74c3c");
+        setFeedbackColor(isCorrect ? "#27AE60" : "#E74C3C");
 
         setTimeout(() => {
-        if (current + 1 < questions.length) {
-            setCurrent(current + 1);
-            setSelected(null);
-            setFeedbackColor("#17285D");
-            fadeIn();
-        } else {
-            setFinished(true);
-        }
-        }, 1000);
+            if (current + 1 < questions.length) {
+                setCurrent(current + 1);
+                setSelected(null);
+                setFeedbackColor("#4A6FA5");
+                fadeIn();
+            } else {
+                setFinished(true);
+            }
+        }, 1200);
     };
 
-    // Reiniciar quiz
     const restart = () => {
         setCurrent(0);
         setSelected(null);
         setCorrect(false);
         setFinished(false);
-        setFeedbackColor("#17285D");
+        setFeedbackColor("#4A6FA5");
         fadeIn();
     };
 
-    // Tela de loading
     if (loading) {
         return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Gerando quiz do seu diário...</Text>
-        </View>
+            <View style={styles.loadingContainer}>
+                <Animated.View style={styles.loadingAnimation}>
+                    <Text style={styles.loadingText}>🧠</Text>
+                </Animated.View>
+                <Text style={styles.loadingTitle}>Analisando seu diário...</Text>
+            </View>
         );
     }
 
-    // Caso não tenha diário
     if (!questions.length) {
         return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Nenhum diário recente encontrado 😕</Text>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Diary")}>
-            <Text style={styles.buttonText}>Escrever no Diário</Text>
-            </TouchableOpacity>
-        </View>
+            <View style={styles.emptyContainer}>
+                <Text style={styles.emptyEmoji}>📝</Text>
+                <Text style={styles.emptyTitle}>Nenhum diário encontrado</Text>
+                <Text style={styles.emptySubtitle}>Escreva no diário para gerar perguntas personalizadas</Text>
+                <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate("Diary")}>
+                    <Text style={styles.primaryButtonText}>Escrever no Diário</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
-    // Tela final
     if (finished) {
         return (
-        <View style={styles.overlay}>
-            <Text style={styles.winText}>Você completou o Quiz! 🧠</Text>
+            <View style={styles.completionContainer}>
+                <Animated.View style={styles.completionAnimation}>
+                    <Text style={styles.completionEmoji}>🎉</Text>
+                </Animated.View>
+                <Text style={styles.completionTitle}>Quiz Concluído!</Text>
+                <Text style={styles.completionSubtitle}>Você exercitou sua memória com sucesso</Text>
+                
+                <TouchableOpacity style={styles.primaryButton} onPress={restart}>
+                    <Text style={styles.primaryButtonText}>Refazer Quiz</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.buttonWhite} onPress={restart}>
-            <Text style={styles.buttonTextBlue}>Jogar novamente</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-            style={[styles.buttonWhite, styles.secondaryButton]}
-            onPress={() => navigation.goBack()}
-            >
-            <Text style={styles.buttonTextWhite}>Voltar ao menu</Text>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
+                    <Text style={styles.secondaryButtonText}>Voltar ao Menu</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
-    // Pergunta atual
     const question = questions[current];
 
     return (
         <View style={styles.container}>
-        <Animated.View style={{ opacity: fadeAnim, alignItems: "center", width: "100%" }}>
-            <Text style={[styles.title, { color: feedbackColor }]}>
-            {question.pergunta}
-            </Text>
-
-            <View style={styles.options}>
-            {question.opcoes.map((opt, i) => (
-                <TouchableOpacity
-                key={i}
-                style={[
-                    styles.option,
-                    selected === opt && {
-                    backgroundColor: correct ? "#27ae60" : "#e74c3c",
-                    transform: [{ scale: 1.05 }],
-                    },
-                ]}
-                onPress={() => handleSelect(opt)}
-                activeOpacity={0.8}
-                >
-                <Text
-                    style={[
-                    styles.optionText,
-                    selected === opt && { color: "#fff", fontWeight: "700" },
-                    ]}
-                >
-                    {opt}
+            <View style={styles.progressContainer}>
+                <View style={styles.progressBar}>
+                    <View 
+                        style={[
+                            styles.progressFill,
+                            { width: `${((current + 1) / questions.length) * 100}%` }
+                        ]} 
+                    />
+                </View>
+                <Text style={styles.progressText}>
+                    {current + 1}/{questions.length}
                 </Text>
-                </TouchableOpacity>
-            ))}
             </View>
 
-            <Text style={styles.progressText}>
-            Pergunta {current + 1} de {questions.length}
-            </Text>
-        </Animated.View>
+            <Animated.View style={[styles.questionContainer, { opacity: fadeAnim }]}>
+                <Text style={styles.category}>SEU DIÁRIO</Text>
+                <Text style={[styles.question, { color: feedbackColor }]}>
+                    {question.pergunta}
+                </Text>
+
+                <View style={styles.optionsContainer}>
+                    {question.opcoes.map((opt, i) => (
+                        <TouchableOpacity
+                            key={i}
+                            style={[
+                                styles.option,
+                                selected === opt && {
+                                    backgroundColor: correct ? "#27AE60" : "#E74C3C",
+                                    transform: [{ scale: selected === opt ? 1.05 : 1 }],
+                                },
+                            ]}
+                            onPress={() => handleSelect(opt)}
+                            disabled={selected}
+                        >
+                            <Text style={[
+                                styles.optionText,
+                                selected === opt && styles.optionTextSelected
+                            ]}>
+                                {opt}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </Animated.View>
         </View>
     );
 }
@@ -174,87 +184,179 @@ export default function DiarioQuiz({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f2f4f8",
+        backgroundColor: "#F0F4F8",
+        padding: 24,
+    },
+    loadingContainer: {
+        flex: 1,
+        backgroundColor: "#F0F4F8",
         alignItems: "center",
         justifyContent: "center",
-        padding: 20,
     },
-    title: {
-        fontSize: 22,
-        fontFamily: "Poppins_700Bold",
+    loadingAnimation: {
+        marginBottom: 20,
+    },
+    loadingText: {
+        fontSize: 64,
+        color: "#17285D",
+    },
+    loadingTitle: {
+        fontSize: 20,
+        fontFamily: "Poppins_600SemiBold",
         color: "#17285D",
         textAlign: "center",
-        marginBottom: 30,
     },
-    options: {
-        width: "100%",
-        alignItems: "center",
-    },
-    option: {
-        backgroundColor: "#8ec0c7",
-        paddingVertical: 14,
-        paddingHorizontal: 25,
-        borderRadius: 14,
-        marginVertical: 8,
-        width: "90%",
-        alignItems: "center",
-        elevation: 2,
-    },
-    optionText: {
-        color: "#17285D",
-        fontSize: 18,
-        fontFamily: "Poppins_600SemiBold",
-    },
-    progressText: {
-        marginTop: 25,
-        color: "#444",
-        fontSize: 14,
-        fontFamily: "Poppins_400Regular",
-    },
-    overlay: {
+    emptyContainer: {
         flex: 1,
+        backgroundColor: "#F0F4F8",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(23,40,93,0.9)",
-        padding: 20,
+        padding: 24,
     },
-    winText: {
-        color: "#fff",
+    emptyEmoji: {
+        fontSize: 64,
+        color: "#17285D",
+        marginBottom: 16,
+    },
+    emptyTitle: {
         fontSize: 24,
         fontFamily: "Poppins_700Bold",
-        marginBottom: 20,
+        color: "#17285D",
+        marginBottom: 8,
         textAlign: "center",
     },
-    buttonWhite: {
-        backgroundColor: "#fff",
-        paddingVertical: 12,
-        paddingHorizontal: 30,
+    emptySubtitle: {
+        fontSize: 16,
+        fontFamily: "Poppins_400Regular",
+        color: "#4A6FA5",
+        textAlign: "center",
+        marginBottom: 32,
+    },
+    progressContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 40,
+    },
+    progressBar: {
+        flex: 1,
+        height: 6,
+        backgroundColor: "#D8E2EC",
+        borderRadius: 3,
+        marginRight: 12,
+        overflow: "hidden",
+    },
+    progressFill: {
+        height: "100%",
+        backgroundColor: "#4A6FA5",
+        borderRadius: 3,
+    },
+    progressText: {
+        fontSize: 14,
+        fontFamily: "Poppins_600SemiBold",
+        color: "#17285D",
+    },
+    questionContainer: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    category: {
+        fontSize: 14,
+        fontFamily: "Poppins_700Bold",
+        color: "#4A6FA5",
+        textAlign: "center",
+        marginBottom: 8,
+        letterSpacing: 2,
+    },
+    question: {
+        fontSize: 28,
+        fontFamily: "Poppins_700Bold",
+        textAlign: "center",
+        marginBottom: 48,
+        lineHeight: 36,
+        color: "#17285D",
+    },
+    optionsContainer: {
+        width: "100%",
+    },
+    option: {
+        backgroundColor: "#E8EEF4",
+        padding: 20,
+        borderRadius: 16,
+        marginVertical: 8,
+        borderWidth: 2,
+        borderColor: "#D8E2EC",
+    },
+    optionText: {
+        fontSize: 18,
+        fontFamily: "Poppins_600SemiBold",
+        color: "#17285D",
+        textAlign: "center",
+    },
+    optionTextSelected: {
+        color: "#FFFFFF",
+        fontWeight: "700",
+    },
+    completionContainer: {
+        flex: 1,
+        backgroundColor: "#F0F4F8",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 24,
+    },
+    completionAnimation: {
+        marginBottom: 24,
+    },
+    completionEmoji: {
+        fontSize: 80,
+        color: "#17285D",
+    },
+    completionTitle: {
+        fontSize: 32,
+        fontFamily: "Poppins_700Bold",
+        color: "#17285D",
+        marginBottom: 8,
+        textAlign: "center",
+    },
+    completionSubtitle: {
+        fontSize: 18,
+        fontFamily: "Poppins_400Regular",
+        color: "#4A6FA5",
+        textAlign: "center",
+        marginBottom: 48,
+    },
+    primaryButton: {
+        backgroundColor: "#4A6FA5",
+        paddingVertical: 16,
+        paddingHorizontal: 32,
         borderRadius: 25,
-        marginVertical: 5,
+        marginVertical: 8,
+        width: "100%",
+        alignItems: "center",
+        shadowColor: "#17285D",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 4,
     },
     secondaryButton: {
-        backgroundColor: "#8ec0c7",
+        backgroundColor: "transparent",
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+        borderRadius: 25,
+        marginVertical: 8,
+        width: "100%",
+        alignItems: "center",
+        borderWidth: 2,
+        borderColor: "#4A6FA5",
     },
-    buttonTextBlue: {
-        color: "#17285D",
+    primaryButtonText: {
+        fontSize: 18,
         fontFamily: "Poppins_700Bold",
-        fontSize: 16,
+        color: "#FFFFFF",
     },
-    buttonTextWhite: {
-        color: "#fff",
-        fontFamily: "Poppins_700Bold",
-        fontSize: 16,
-    },
-    button: {
-        backgroundColor: "#fff",
-        paddingVertical: 12,
-        paddingHorizontal: 25,
-        borderRadius: 20,
-        marginTop: 20,
-    },
-    buttonText: {
-        color: "#17285D",
-        fontFamily: "Poppins_700Bold",
-        fontSize: 16,
+    secondaryButtonText: {
+        fontSize: 18,
+        fontFamily: "Poppins_600SemiBold",
+        color: "#4A6FA5",
     },
 });

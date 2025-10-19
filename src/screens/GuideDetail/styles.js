@@ -48,11 +48,10 @@ export const styles = StyleSheet.create({
     fixedPlaceholder: {
         width: 40,
     },
-    // HERO SECTION COM ALTURA REDUZIDA
     heroImage: {
         width: "100%",
-        height: 320, // Reduzido de 400 para 320
-        justifyContent: "flex-end", // Alinha o conteúdo na parte inferior
+        height: 320, 
+        justifyContent: "flex-end", 
     },
     heroOverlay: {
         ...StyleSheet.absoluteFillObject,
@@ -72,14 +71,14 @@ export const styles = StyleSheet.create({
     },
     heroContent: {
         padding: 20,
-        paddingBottom: 25, // Reduzido o padding inferior
+        paddingBottom: 25,
     },
     categoryBadge: {
         alignSelf: "flex-start",
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 12,
-        marginBottom: 12, // Reduzido
+        marginBottom: 12,
     },
     categoryText: {
         fontSize: 12,
@@ -88,11 +87,11 @@ export const styles = StyleSheet.create({
         textTransform: "uppercase",
     },
     title: {
-        fontSize: 28, // Reduzido ligeiramente
+        fontSize: 28,
         fontFamily: "Poppins_700Bold",
         color: "#fff",
-        lineHeight: 34, // Reduzido
-        marginBottom: 15, // Reduzido
+        lineHeight: 34, 
+        marginBottom: 15, 
         textShadowColor: "rgba(0,0,0,0.5)",
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 5,
@@ -119,7 +118,7 @@ export const styles = StyleSheet.create({
     metaItem: {
         flexDirection: "row",
         alignItems: "center",
-        marginLeft: 12, // Alterado de marginRight para marginLeft
+        marginLeft: 12, 
     },
     metaText: {
         fontSize: 12,
@@ -127,7 +126,6 @@ export const styles = StyleSheet.create({
         color: "rgba(255,255,255,0.8)",
         marginLeft: 4,
     },
-    // O resto dos estilos permanece igual
     content: {
         padding: 24,
         backgroundColor: "#fff",

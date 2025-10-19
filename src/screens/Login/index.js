@@ -13,7 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login } from '../../services/authService';
-import logo from '../../../assets/logo.png';
+import logo from '../../../assets/traco.png';
 import fundo from '../../../assets/fundologin.png';
 import { styles } from './styles';
 
@@ -141,12 +141,6 @@ export default function LoginScreen({ navigation }) {
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-                style={{ marginTop: 15 }}
-                onPress={() => navigation.navigate('MainContainer')}
-            >
-                <Text style={{ fontFamily: 'Poppins_700Bold' }}>DEV</Text>
-            </TouchableOpacity>
             </View>
         </View>
         </ImageBackground>

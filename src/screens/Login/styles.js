@@ -22,10 +22,10 @@ export const styles = StyleSheet.create({
         elevation: 5,
     },
     logo: {
-        width: 200,
-        height: 175,
+        width: 400,
+        height: 225,
         resizeMode: 'contain',
-        marginBottom: 10,
+        marginBottom: -20,
     },
     title: {
         fontSize: 22,
