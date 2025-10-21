@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, Vibration } from "react-native";
+import LottieView from "lottie-react-native";
 
 const { width } = Dimensions.get("window");
 const CARD_SIZE = (width - 80) / 4;
@@ -190,6 +191,15 @@ export default function MemoryPairs({ navigation }) {
                     <View style={styles.winContainer}>
                         <Text style={styles.winText}>🎉 Parabéns!</Text>
                         <Text style={styles.winSubtitle}>Você completou em {moves} movimentos</Text>
+
+                <View style={styles.spacer}>
+                    <LottieView
+                        source={require('../../../../assets/animations/dsg_memu.json')}
+                        autoPlay
+                        loop
+                        style={styles.animation}
+                    />
+                </View>                        
                         
                         <TouchableOpacity 
                             style={styles.primaryButton} 
@@ -355,5 +365,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: "Poppins_600SemiBold",
         color: "#4A6FA5",
+    },
+    animation: {
+        width: 230,
+        height: 600,
+        marginTop: -200,
+        marginBottom: -150,
+    },
+    spacer: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

@@ -1,4 +1,4 @@
-// DiarioQuiz.js - Ajustado
+// DiarioQuiz.js - com tela de vitória estilo MemoryPairs
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from "react-native";
 import { generateQuestionsFromDiary } from "../../../services/quizGenerator";
@@ -17,28 +17,49 @@ export default function DiarioQuiz({ navigation }) {
     const [loading, setLoading] = useState(true);
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const [feedbackColor, setFeedbackColor] = useState("#4A6FA5");
+    const timeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         loadUser();
     }, []);
 
     async function loadUser() {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) return console.error(error);
-        setUser(data.user);
-        loadDiary(data.user.id);
+        try {
+            const res = await supabase.auth.getUser();
+            const u = res?.data?.user ?? res?.user ?? null;
+            if (!u) {
+                setLoading(false);
+                return;
+            }
+            setUser(u);
+            await loadDiary(u.id);
+        } catch (err) {
+            console.error("Erro ao obter usuário:", err);
+            setLoading(false);
+        }
     }
 
     async function loadDiary(userId) {
         try {
             const data = await getDiaries(userId);
-            if (!data || data.length === 0) {
+            if (!Array.isArray(data) || data.length === 0) {
                 setLoading(false);
                 return;
             }
-            const latest = data[0].conteudo;
-            const q = generateQuestionsFromDiary(latest);
-            setQuestions(q);
+            const latest = data[0].conteudo ?? "";
+            const q = generateQuestionsFromDiary(latest) ?? [];
+            const normalized = q.map(item => ({
+                pergunta: item.pergunta ?? "",
+                opcoes: Array.isArray(item.opcoes) ? item.opcoes : [],
+                respostaCorreta: ("respostaCorreta" in item) ? item.respostaCorreta : null,
+            }));
+            setQuestions(normalized);
             setLoading(false);
             fadeIn();
         } catch (err) {
@@ -56,18 +77,46 @@ export default function DiarioQuiz({ navigation }) {
         }).start();
     };
 
+    const optionToString = (opt) => {
+        if (opt === null || opt === undefined) return "";
+        if (typeof opt === "string") return opt;
+        if (typeof opt === "number") return String(opt);
+        if (typeof opt === "object") {
+            return opt.text ?? opt.label ?? JSON.stringify(opt);
+        }
+        return String(opt);
+    };
+
+    const getCorrectAnswerString = (question) => {
+        const rc = question?.respostaCorreta;
+        if (rc === null || rc === undefined) return null;
+        if (typeof rc === "number") return optionToString(question.opcoes?.[rc]);
+        if (typeof rc === "string") return rc;
+        if (typeof rc === "object") return optionToString(rc);
+        return String(rc);
+    };
+
     const handleSelect = (opt) => {
-        if (selected) return;
+        if (selected !== null) return;
+
         const question = questions[current];
+        if (!question) return;
+
+        const chosen = optionToString(opt);
+        const correctAnswer = getCorrectAnswerString(question);
+
         setSelected(opt);
-        const isCorrect = opt === question.respostaCorreta;
+        const isCorrect = correctAnswer !== null ? chosen === correctAnswer : false;
         setCorrect(isCorrect);
         setFeedbackColor(isCorrect ? "#27AE60" : "#E74C3C");
 
-        setTimeout(() => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+        timeoutRef.current = setTimeout(() => {
             if (current + 1 < questions.length) {
-                setCurrent(current + 1);
+                setCurrent(prev => prev + 1);
                 setSelected(null);
+                setCorrect(false);
                 setFeedbackColor("#4A6FA5");
                 fadeIn();
             } else {
@@ -77,12 +126,18 @@ export default function DiarioQuiz({ navigation }) {
     };
 
     const restart = () => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
         setCurrent(0);
         setSelected(null);
         setCorrect(false);
         setFinished(false);
         setFeedbackColor("#4A6FA5");
         fadeIn();
+    };
+
+    const goBack = () => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        navigation.goBack();
     };
 
     if (loading) {
@@ -96,7 +151,7 @@ export default function DiarioQuiz({ navigation }) {
         );
     }
 
-    if (!questions.length) {
+    if (!questions || questions.length === 0) {
         return (
             <View style={styles.emptyContainer}>
                 <Text style={styles.emptyEmoji}>📝</Text>
@@ -109,37 +164,54 @@ export default function DiarioQuiz({ navigation }) {
         );
     }
 
+    // NOVA TELA DE VITÓRIA ESTILO MEMORYPAIRS
     if (finished) {
         return (
-            <View style={styles.completionContainer}>
-                <Animated.View style={styles.completionAnimation}>
-                    <Text style={styles.completionEmoji}>🎉</Text>
-                </Animated.View>
-                <Text style={styles.completionTitle}>Quiz Concluído!</Text>
-                <Text style={styles.completionSubtitle}>Você exercitou sua memória com sucesso</Text>
-                
-                <TouchableOpacity style={styles.primaryButton} onPress={restart}>
-                    <Text style={styles.primaryButtonText}>Refazer Quiz</Text>
-                </TouchableOpacity>
+            <View style={styles.overlay}>
+                <View style={styles.winContainer}>
+                    <Text style={styles.winText}>🎉 Parabéns!</Text>
+                    <Text style={styles.winSubtitle}>Você completou o quiz!</Text>
 
-                <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
-                    <Text style={styles.secondaryButtonText}>Voltar ao Menu</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={styles.primaryButton} 
+                        onPress={restart}
+                    >
+                        <Text style={styles.primaryButtonText}>Jogar Novamente</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={styles.secondaryButton} 
+                        onPress={goBack}
+                    >
+                        <Text style={styles.secondaryButtonText}>Voltar ao Menu</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
 
     const question = questions[current];
+    if (!question) {
+        return (
+            <View style={styles.emptyContainer}>
+                <Text style={styles.emptyEmoji}>❓</Text>
+                <Text style={styles.emptyTitle}>Pergunta não encontrada</Text>
+                <TouchableOpacity style={styles.primaryButton} onPress={restart}>
+                    <Text style={styles.primaryButtonText}>Recomeçar</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.progressContainer}>
                 <View style={styles.progressBar}>
-                    <View 
+                    <View
                         style={[
                             styles.progressFill,
                             { width: `${((current + 1) / questions.length) * 100}%` }
-                        ]} 
+                        ]}
                     />
                 </View>
                 <Text style={styles.progressText}>
@@ -154,27 +226,31 @@ export default function DiarioQuiz({ navigation }) {
                 </Text>
 
                 <View style={styles.optionsContainer}>
-                    {question.opcoes.map((opt, i) => (
-                        <TouchableOpacity
-                            key={i}
-                            style={[
-                                styles.option,
-                                selected === opt && {
-                                    backgroundColor: correct ? "#27AE60" : "#E74C3C",
-                                    transform: [{ scale: selected === opt ? 1.05 : 1 }],
-                                },
-                            ]}
-                            onPress={() => handleSelect(opt)}
-                            disabled={selected}
-                        >
-                            <Text style={[
-                                styles.optionText,
-                                selected === opt && styles.optionTextSelected
-                            ]}>
-                                {opt}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
+                    {question.opcoes && question.opcoes.map((opt, i) => {
+                        const optText = optionToString(opt);
+                        const isSelected = selected !== null && optionToString(selected) === optText;
+                        return (
+                            <TouchableOpacity
+                                key={i}
+                                style={[
+                                    styles.option,
+                                    isSelected && {
+                                        backgroundColor: correct ? "#27AE60" : "#E74C3C",
+                                        transform: [{ scale: isSelected ? 1.05 : 1 }],
+                                    },
+                                ]}
+                                onPress={() => handleSelect(opt)}
+                                disabled={selected !== null}
+                            >
+                                <Text style={[
+                                    styles.optionText,
+                                    isSelected && styles.optionTextSelected
+                                ]}>
+                                    {optText}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
                 </View>
             </Animated.View>
         </View>
@@ -296,33 +372,44 @@ const styles = StyleSheet.create({
         color: "#FFFFFF",
         fontWeight: "700",
     },
-    completionContainer: {
-        flex: 1,
-        backgroundColor: "#F0F4F8",
+
+    // 🎉 Estilos da tela de vitória (do MemoryPairs)
+    overlay: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(23,40,93,0.95)",
         alignItems: "center",
         justifyContent: "center",
-        padding: 24,
+        padding: 20,
     },
-    completionAnimation: {
-        marginBottom: 24,
+    winContainer: {
+        backgroundColor: "#FFFFFF",
+        padding: 30,
+        borderRadius: 20,
+        alignItems: "center",
+        width: "100%",
+        shadowColor: "#17285D",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 5,
     },
-    completionEmoji: {
-        fontSize: 80,
-        color: "#17285D",
-    },
-    completionTitle: {
+    winText: {
         fontSize: 32,
         fontFamily: "Poppins_700Bold",
         color: "#17285D",
         marginBottom: 8,
         textAlign: "center",
     },
-    completionSubtitle: {
+    winSubtitle: {
         fontSize: 18,
         fontFamily: "Poppins_400Regular",
         color: "#4A6FA5",
+        marginBottom: 30,
         textAlign: "center",
-        marginBottom: 48,
     },
     primaryButton: {
         backgroundColor: "#4A6FA5",

@@ -10,6 +10,7 @@ import {
     Image
 } from 'react-native';
 import { styles } from './styles';
+import LottieView from 'lottie-react-native';
 
 if (Platform.OS === 'android') {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -203,7 +204,16 @@ export default function About() {
                 </View>
             ))}
 
-            <Text style={styles.version}>Versão 0.4.0</Text>
+            <View style={styles.spacer}>
+                <LottieView
+                    source={require('../../../assets/animations/run_memu.json')}
+                    autoPlay
+                    loop
+                    style={styles.animation}
+                />
+            </View>
+
+            <Text style={styles.version}>Versão 1.0.0</Text>
         </ScrollView>
     );
 }

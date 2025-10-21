@@ -14,6 +14,9 @@ import { getSessionUser, getUserProfile } from "../../services/userService";
 import { getGames } from "../../services/gameService";
 import { getGuides } from "../../services/guideService";
 import { atualizarOfensiva, getOfensiva } from "../../services/ofensivaService";
+import LottieView from "lottie-react-native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const { width } = Dimensions.get("window");
 
@@ -25,6 +28,7 @@ export default function Home({ navigation }) {
     const [ofensiva, setOfensiva] = useState(null);
     const [fadeAnim] = useState(new Animated.Value(0));
     const [slideAnim] = useState(new Animated.Value(30));
+    const animationRef = useRef(null);
 
     useEffect(() => {
         (async () => {
@@ -64,6 +68,23 @@ export default function Home({ navigation }) {
             ]).start();
         })();
     }, []);
+
+    // ADICIONE ESTE HOOK AQUI
+        useFocusEffect(
+            useCallback(() => {
+                // Resetar e rodar a animação quando a tela ganhar foco
+                if (animationRef.current) {
+                    setTimeout(() => {
+                        animationRef.current.reset();
+                        animationRef.current.play();
+                    }, 100);
+                }
+    
+                return () => {
+                    // Limpeza opcional quando a tela perder foco
+                };
+            }, [])
+        );
 
     const atualizarEBuscarOfensiva = async (userId) => {
         try {
@@ -158,7 +179,7 @@ export default function Home({ navigation }) {
             showsVerticalScrollIndicator={false}
         >
             {/* Header Imersivo */}
-            <View style={styles.header}>
+            <View style={styles.header}>               
                 
                 
                 <View style={styles.userGreeting}>
@@ -330,14 +351,14 @@ export default function Home({ navigation }) {
             <View style={styles.tipCard}>
                 <Ionicons name="bulb" size={24} color="#FFD700" />
                 <Text style={styles.tipText}>
-                    "Pratique 15 minutos de exercícios mentais por dia para manter sua memória afiada!"
+                    "O Memo está aqui para te ajudar a fortalecer sua memória diariamente."
                 </Text>
             </View>
         </Animated.ScrollView>
     );
 }
 
-const styles = {
+const styles = {    
     container: {
         flex: 1,
         backgroundColor: "#f8fafc",
@@ -734,4 +755,18 @@ const styles = {
         flex: 1,
         fontStyle: "italic",
     },
+    animation: {
+        width: 300,
+        height: 550,
+        marginTop: -210,
+        marginBottom: -240,
+        alignItems: 'center',
+        justifyContent: 'center',
+
+    },
+    spacer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
+
 };

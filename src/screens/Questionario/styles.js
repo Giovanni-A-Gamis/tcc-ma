@@ -219,6 +219,11 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Poppins_700Bold',
     },
-
+    animation: {
+        width: 300,
+        height: 550,
+        marginTop: 130,
+        marginBottom: 10,
+    }
 
 });

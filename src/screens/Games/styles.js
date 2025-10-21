@@ -185,4 +185,18 @@ export const styles = StyleSheet.create({
         flex: 1,
         textAlign: "center",
     },
+    animation: {
+        width: 200,
+        height: 550,
+        marginTop: -210,
+        marginBottom: -240,
+        alignItems: 'center',
+        justifyContent: 'center',
+
+    },
+    spacer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
+
 });

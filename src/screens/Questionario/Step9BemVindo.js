@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, ImageBackground, Alert } from 'react-native';
 import { styles } from './styles';
-import memooi from '../../../assets/memooi.png';
+import LottieView from 'lottie-react-native';
 import fundo2 from '../../../assets/fundoquest.jpg';
 import { supabase } from '../../lib/supabase';
 
@@ -156,7 +156,12 @@ export default function Step9BemVindo({ navigation, route }) {
                     <Text style={styles.speechText}>Agora sim, seja bem vindo ao nosso aplicativo!!</Text>
                 </View>
 
-                <Image source={memooi} style={styles.image} resizeMode="contain" />
+                <LottieView
+                    source={require('../../../assets/animations/phone_memu.json')}
+                    autoPlay
+                    loop
+                    style={styles.animation}
+                />
 
                 <TouchableOpacity style={styles.button} onPress={finish} disabled={loading}>
                     <Text style={styles.buttonText}>{loading ? 'Criando conta...' : 'Finalizar'}</Text>

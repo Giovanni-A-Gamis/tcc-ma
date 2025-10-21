@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { 
     View, 
     Text, 
@@ -12,6 +12,9 @@ import {
 import { styles } from "./styles";
 import { getGames } from "../../services/gameService";
 import { Ionicons } from "@expo/vector-icons";
+import LottieView from "lottie-react-native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const { width } = Dimensions.get('window');
 
@@ -19,6 +22,24 @@ export default function GameScreen({ navigation }) {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [fadeAnim] = useState(new Animated.Value(0));
+    const animationRef = useRef(null);
+
+    // ADICIONE ESTE HOOK AQUI
+    useFocusEffect(
+        useCallback(() => {
+            // Resetar e rodar a animação quando a tela ganhar foco
+            if (animationRef.current) {
+                setTimeout(() => {
+                    animationRef.current.reset();
+                    animationRef.current.play();
+                }, 100);
+            }
+
+            return () => {
+                // Limpeza opcional quando a tela perder foco
+            };
+        }, [])
+    );
 
     useEffect(() => {
         async function fetchGames() {
@@ -88,6 +109,19 @@ export default function GameScreen({ navigation }) {
                 </View>
             </View>
 
+            <View style={styles.spacer}>
+                <LottieView
+                    ref={animationRef}
+                    source={require('../../../assets/animations/hide_memu.json')}
+                    autoPlay
+                    loop={false}
+                    style={styles.animation}
+                    onAnimationFinish={() => {
+                        console.log('Animação finalizada - mantendo último frame');
+                    }}
+                />
+            </View>
+
             {/* Games Grid */}
             <View style={styles.gamesGrid}>
                 {games.map((game, index) => (
@@ -147,9 +181,9 @@ export default function GameScreen({ navigation }) {
             <View style={styles.footer}>
                 <Ionicons name="bulb" size={24} color="#FFD700" />
                 <Text style={styles.footerText}>
-                    Pratique 15 minutos por dia para melhorar sua memória!
+                    Pratique pelo menos 15 minutos ao dia para manter sua mente ativa!
                 </Text>
-            </View>
+            </View>           
         </Animated.ScrollView>
     );
 }

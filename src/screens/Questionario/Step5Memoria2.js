@@ -20,7 +20,7 @@ export default function Step5Memoria2({ navigation, route }) {
     
     const nivelAtual = formData.nivel_memoria || 0;
     const pontos = opcoes[selected].pontos;
-    const novoNivel = Math.min(nivelAtual + pontos, 1000); // limite de 1000 pontos no início
+    const novoNivel = Math.min(nivelAtual + pontos, 1000);
 
     navigation.navigate('Step6Memoria3', {
       formData: { 
@@ -33,6 +33,9 @@ export default function Step5Memoria2({ navigation, route }) {
       }
     });
   };
+
+  // Verifica se alguma opção foi selecionada (incluindo a primeira)
+  const isSelected = selected !== null;
 
   return (
     <ImageBackground source={fundo2} resizeMode="cover" style={styles.background}>
@@ -47,7 +50,7 @@ export default function Step5Memoria2({ navigation, route }) {
               key={index}
               style={[
                 styles.checkboxContainer,
-                selected === index
+                selected === index && styles.selectedOption
               ]}
               onPress={() => setSelected(index)}
             >
@@ -61,8 +64,8 @@ export default function Step5Memoria2({ navigation, route }) {
         </View>
 
         <TouchableOpacity 
-          style={[styles.button, !selected && { opacity: 0.5 }]} 
-          disabled={!selected} 
+          style={[styles.button, !isSelected && { opacity: 0.5 }]} 
+          disabled={!isSelected} 
           onPress={next}
         >
           <Text style={styles.buttonText}>Próximo</Text>

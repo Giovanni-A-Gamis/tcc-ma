@@ -87,4 +87,16 @@ export const styles = StyleSheet.create({
         marginTop: 20,
         color: '#777',
     },
+
+    animation: {
+        width: 200,
+        height: 550,
+        marginTop: -190,
+        marginBottom: -200,
+    },
+
+    spacer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 });

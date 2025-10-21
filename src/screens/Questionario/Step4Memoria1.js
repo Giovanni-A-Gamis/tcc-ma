@@ -34,6 +34,9 @@ export default function Step4Memoria1({ navigation, route }) {
     });
   };
 
+  // Verifica se alguma opção foi selecionada (incluindo a primeira)
+  const isSelected = selected !== null;
+
   return (
     <ImageBackground source={fundo2} resizeMode="cover" style={styles.background}>
       <ScrollView style={styles.container2} contentContainerStyle={styles.content}>
@@ -45,7 +48,7 @@ export default function Step4Memoria1({ navigation, route }) {
               key={index}
               style={[
                 styles.checkboxContainer,
-                selected === index 
+                selected === index && styles.selectedOption
               ]}
               onPress={() => setSelected(index)}
             >
@@ -59,8 +62,8 @@ export default function Step4Memoria1({ navigation, route }) {
         </View>
 
         <TouchableOpacity 
-          style={[styles.button, !selected && { opacity: 0.5 }]} 
-          disabled={!selected} 
+          style={[styles.button, !isSelected && { opacity: 0.5 }]} 
+          disabled={!isSelected} 
           onPress={next}
         >
           <Text style={styles.buttonText}>Próximo</Text>

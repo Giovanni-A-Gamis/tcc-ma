@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { styles } from "./styles";
+import LottieView from "lottie-react-native";
 
 export default function GuideDetail({ navigation, route }) {
     const { guia } = route.params;
@@ -122,6 +123,15 @@ export default function GuideDetail({ navigation, route }) {
                             Pratique estas técnicas regularmente para obter os melhores resultados na sua memória.
                         </Text>
                     </View>
+                    
+                    <View style={styles.spacer}>
+                        <LottieView
+                        source={require('../../../assets/animations/reading_memu.json')}
+                        autoPlay
+                        loop
+                        style={styles.animation}
+                        />
+                    </View>  
 
                     <View style={styles.ctaSection}>
                         <Text style={styles.ctaTitle}>Gostou deste guia?</Text>

@@ -212,4 +212,14 @@ export const styles = StyleSheet.create({
         fontFamily: "Poppins_600SemiBold",
         color: "#fff",
     },
+    animation: {
+        width: 230,
+        height: 600,
+        marginTop: -200,
+        marginBottom: -150,
+    },
+    spacer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
